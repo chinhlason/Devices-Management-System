@@ -1,7 +1,7 @@
 import Header from './Header';
 import Sidebar from './Sidebar';
 
-function defaultLayout({ children }) {
+function HeaderOnly({ children }) {
     return (
         <div>
             <Header />
@@ -13,4 +13,4 @@ function defaultLayout({ children }) {
     );
 }
 
-export default defaultLayout;
+export default HeaderOnly;

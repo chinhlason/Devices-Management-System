@@ -4,7 +4,7 @@ import { HeaderOnly } from '~/components/Layout';
 
 const publicRoutes = [
     { path: '/', component: Login, layout: null },
-    { path: '/service', component: Service, layout: HeaderOnly },
+    { path: '/', component: Service },
 ];
 
 const privateRoutes = [];
