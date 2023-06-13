@@ -1,20 +1,21 @@
 import styles from './login.module.scss';
 import classNames from 'classnames/bind';
-import React, { useState, useRef, useEffect, useContext } from 'react';
-import AuthContext from '~/context/AuthProvider';
-import axios from '~/api/axios';
+import React, { useState, useRef, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
+import httpRequest from '~/utils/htppRequest';
+// import { BrowserRouter as Link } from 'react-router-dom';
 
 const cx = classNames.bind(styles);
-const LOGIN_URL = '/signin';
+const LOGIN_URL = '/auth/signin';
 
 const Login = () => {
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
     const userRef = useRef();
     const errRef = useRef();
-    const { setAuth } = useContext(AuthContext);
     const [errMsg, setErrMsg] = useState('');
     const [success, setSuccess] = useState(false);
+    const navigate = useNavigate();
 
     useEffect(() => {
         userRef.current.focus();
@@ -24,31 +25,31 @@ const Login = () => {
         setErrMsg('');
     }, [username, password]);
 
-    const handleSubmit = async (e) => {
+    const handleSubmit = (e) => {
         e.preventDefault();
-        try {
-            const response = await axios.post(LOGIN_URL, JSON.stringify({ username, password }), {
+        httpRequest
+            .post(LOGIN_URL, {
                 headers: {
-                    'Content-Type': 'application/json', // Đổi Content-Type thành application/json
-                    // Các header khác nếu cần thiết
+                    'Content-Type': 'application/json',
                 },
+                username,
+                password,
                 withCredentials: true,
+            })
+            .then((response) => {
+                // console.log(response.data);
+                console.log(response.data);
+                setUsername('');
+                setPassword('');
+                setSuccess(true);
+                navigate('/service');
+            })
+            .catch((err) => {
+                if (err.response?.status === 400) {
+                    setErrMsg('Sai tài khoản hoặc mật khẩu!');
+                }
+                errRef.current.focus();
             });
-            console.log(JSON.stringify(response?.data));
-            const accessToken = response?.data?.accessToken;
-            const roles = response?.data?.roles;
-            setAuth({ username, password, roles, accessToken });
-            setUsername('');
-            setPassword('');
-            setSuccess(true);
-        } catch (err) {
-            if (err.response?.httpStatusCode === 400) {
-                setErrMsg('Sai tài khoản hoặc mật khẩu!');
-            } else {
-                setErrMsg('Đăng nhập không thành công');
-            }
-            errRef.current.focus();
-        }
     };
 
     return (
@@ -59,9 +60,6 @@ const Login = () => {
                 </section>
             ) : (
                 <section>
-                    <p ref={errRef} className={errMsg ? 'errmsg' : 'offscreen'} aria-live="assertive">
-                        {errMsg}
-                    </p>
                     <div className={cx('wrapper')}>
                         <div className={cx('login-image')}></div>
                         <form onSubmit={handleSubmit}>
@@ -88,7 +86,17 @@ const Login = () => {
                                         value={password}
                                         required
                                     ></input>
-                                    <small className={cx('fail-noti')}></small>
+                                    <p
+                                        ref={errRef}
+                                        className={errMsg ? 'errmsg' : 'offscreen'}
+                                        aria-live="assertive"
+                                        style={{
+                                            color: 'white',
+                                            padding: 2,
+                                        }}
+                                    >
+                                        {errMsg}
+                                    </p>
                                 </div>
                                 <button className={cx('login-button')}>Đăng nhập</button>
                                 <div className={cx('login-box-footer')}></div>
