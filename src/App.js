@@ -10,12 +10,12 @@ function App() {
                 <Routes>
                     {publicRoutes.map((route, index) => {
                         let Layout = DefaultLayout;
+                        const Page = route.component;
                         if (route.layout) {
                             Layout = route.layout;
                         } else if (route.layout === null) {
                             Layout = Fragment;
                         }
-                        const Page = route.component;
                         return (
                             <Route
                                 key={index}

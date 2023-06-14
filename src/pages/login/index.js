@@ -42,7 +42,7 @@ const Login = () => {
                 setUsername('');
                 setPassword('');
                 setSuccess(true);
-                navigate('/service');
+                navigate('/profile');
             })
             .catch((err) => {
                 if (err.response?.status === 400) {
