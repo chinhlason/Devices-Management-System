@@ -27,22 +27,26 @@ const Login = () => {
 
     const handleSubmit = (e) => {
         e.preventDefault();
+
         httpRequest
-            .post(LOGIN_URL, {
-                headers: {
-                    'Content-Type': 'application/json',
+            .post(
+                LOGIN_URL,
+                {
+                    username,
+                    password,
                 },
-                username,
-                password,
-                withCredentials: true,
-            })
+                { withCredentials: true },
+            )
             .then((response) => {
-                // console.log(response.data);
                 console.log(response.data);
                 setUsername('');
                 setPassword('');
                 setSuccess(true);
-                navigate('/profile');
+                if (response.data.roles[0] === 'ROLE_ADMIN') {
+                    navigate(`/profile?role=${response.data.roles[0]}`);
+                } else {
+                    navigate(`/service?role=${response.data.roles[0]}`);
+                }
             })
             .catch((err) => {
                 if (err.response?.status === 400) {
