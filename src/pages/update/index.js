@@ -79,6 +79,10 @@ function Update() {
         return true;
     };
     console.log(userInfor.username);
+
+    const handleCancel = () => {
+        navigate('/profile?role=ROLE_ADMIN');
+    };
     return (
         <div>
             <header>THAY ĐỔI THÔNG TIN TÀI KHOẢN</header>
@@ -154,6 +158,7 @@ function Update() {
                 <p>{errors.tenBan?.message}</p>
                 <input type="submit" />
             </form>
+            <button onClick={handleCancel}>Huỷ</button>
         </div>
     );
 }

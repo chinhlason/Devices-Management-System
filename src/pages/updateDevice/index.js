@@ -124,10 +124,10 @@ function UpdateDevices() {
                 />
                 <p>{errors.categoryId?.message}</p>
                 <input type="submit" />
-                <button type onClick={handleCancel}>
-                    Huỷ
-                </button>
             </form>
+            <button type onClick={handleCancel}>
+                Huỷ
+            </button>
         </div>
     );
 }
