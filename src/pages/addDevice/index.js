@@ -3,6 +3,7 @@ import { useState, useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
 import httpRequest from '~/utils/htppRequest';
+import { read, utils, writeFile } from 'xlsx';
 const PHIEU_NHAP_URL = '/phieunhap/add';
 const AddDevice = () => {
     const navigate = useNavigate();
@@ -40,14 +41,23 @@ const AddDevice = () => {
             </div>
         );
     };
-    const handleSubmitDevice = ({ name, serial, price, warrantyTime, maintenanceTime, categoryId }) => {
+    const handleSubmitDevice = ({
+        name,
+        serial,
+        price,
+        warrantyTime,
+        maintenanceTime,
+        categoryName,
+        categoryDescription,
+    }) => {
         const deviceData = {
             name,
             serial,
             price,
             warrantyTime,
             maintenanceTime,
-            categoryId,
+            categoryName,
+            categoryDescription,
         };
         setDeviceList((prevData) => [...prevData, deviceData]);
         reset({
@@ -56,7 +66,8 @@ const AddDevice = () => {
             price: 0,
             warrantyTime: 0,
             maintenanceTime: 0,
-            categoryId: 0,
+            categoryName: '',
+            categoryDescription: '',
         });
     };
 
@@ -72,7 +83,8 @@ const AddDevice = () => {
                 price: device.price,
                 warrantyTime: device.warrantyTime,
                 maintenanceTime: device.maintenanceTime,
-                categoryId: device.categoryId,
+                categoryName: device.categoryName,
+                categoryDescription: device.categoryDescription,
             })),
         };
         httpRequest
@@ -101,6 +113,37 @@ const AddDevice = () => {
             return 'Vui lòng nhập đúng số điện thoại';
         }
         return true;
+    };
+
+    const handleImportFile = (event) => {
+        console.log('File Import');
+        const files = event.target.files;
+        if (files.length) {
+            const file = files[0];
+            const reader = new FileReader();
+            reader.onload = (event) => {
+                const data = new Uint8Array(event.target.result);
+                const workbook = read(data, { type: 'array' });
+                const worksheet = workbook.Sheets[workbook.SheetNames[0]];
+
+                const rows = utils.sheet_to_json(worksheet, {
+                    header: [
+                        'name',
+                        'serial',
+                        'price',
+                        'warrantyTime',
+                        'maintenanceTime',
+                        'categoryName',
+                        'categoryDescription',
+                    ],
+                    raw: true,
+                });
+                console.log('excel:');
+                console.log(rows);
+                setDeviceList(rows);
+            };
+            reader.readAsArrayBuffer(file);
+        }
     };
 
     return (
@@ -194,6 +237,15 @@ const AddDevice = () => {
                         <button type="submit" onClick={handleSubmit(handleSubmitDevice)}>
                             +
                         </button>
+                        <input
+                            type="file"
+                            name="file"
+                            className="custom-file-input"
+                            id="inputGroupFile"
+                            required
+                            onChange={handleImportFile}
+                            accept=".csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel"
+                        />
                     </div>
                     <button type="button" onClick={onSubmitAll}>
                         Tạo phiếu nhập
