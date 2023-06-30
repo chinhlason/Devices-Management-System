@@ -48,7 +48,7 @@ function UpdateDevices() {
             .then((response) => {
                 console.log(response.data);
                 alert('Cập nhật thành công!');
-                navigate('/service?role=ROLE_ADMIN');
+                navigate('/service');
             })
             .catch((err) => {
                 if (err.response?.status === 400) {
@@ -58,7 +58,7 @@ function UpdateDevices() {
     };
 
     const handleCancel = () => {
-        navigate('/service?role=ROLE_ADMIN');
+        navigate('/service');
     };
     return (
         <div>

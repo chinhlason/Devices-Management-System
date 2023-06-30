@@ -1,6 +1,6 @@
 import { useLocation } from 'react-router-dom';
 import httpRequest from '~/utils/htppRequest';
-import { useForm, Controller, formState } from 'react-hook-form';
+import { useForm } from 'react-hook-form';
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 const EXPORT_URL = '/phieuxuat/add';
@@ -14,7 +14,6 @@ function Export() {
     const {
         register,
         handleSubmit,
-        control,
         formState: { errors },
     } = useForm();
     const [deviceInfor, setDeviceInfo] = useState({});
@@ -87,7 +86,7 @@ function Export() {
             .then((response) => {
                 console.log(response);
                 alert('Tạo mới thành công');
-                navigate('/service?role=ROLE_ADMIN');
+                navigate('/service');
             })
             .catch((err) => {
                 console.log(err);

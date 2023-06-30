@@ -90,7 +90,7 @@ function ExportListDevice() {
                 .then((response) => {
                     console.log(response);
                     alert('Tạo mới thành công');
-                    navigate('/service?role=ROLE_ADMIN');
+                    navigate('/service');
                 })
                 .catch((err) => {
                     console.log(err);

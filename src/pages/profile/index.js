@@ -10,10 +10,7 @@ const USER_URL = '/user/list';
 function Profile() {
     const navigate = useNavigate();
     const handleChange = (id) => {
-        const queryParams = new URLSearchParams();
-        queryParams.append('id', id);
-        queryParams.append('role', 'ROLE_ADMIN');
-        navigate(`/update?${queryParams.toString()}`);
+        navigate(`/update?id=${id}`);
     };
     const handleDisable = (id) => {
         console.log('Disable user with ID:', id);
@@ -59,7 +56,7 @@ function Profile() {
     };
 
     const handleSignup = () => {
-        navigate('/signup?role=ROLE_ADMIN');
+        navigate('/signup');
     };
 
     const cellClickedListener = useCallback((event) => {

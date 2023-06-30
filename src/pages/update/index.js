@@ -2,7 +2,7 @@ import { useLocation } from 'react-router-dom';
 import httpRequest from '~/utils/htppRequest';
 import * as emailValidator from 'email-validator';
 import React, { useState, useEffect } from 'react';
-import { useForm, Controller, formState } from 'react-hook-form';
+import { useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
 const USER_URL = '/user/list';
 
@@ -57,7 +57,7 @@ function Update() {
             .then((response) => {
                 console.log(response.data);
                 alert('Cập nhật thành công!');
-                navigate('/profile?role=ROLE_ADMIN');
+                navigate('/profile');
             })
             .catch((err) => {
                 if (err.response?.status === 400) {
@@ -81,7 +81,7 @@ function Update() {
     console.log(userInfor.username);
 
     const handleCancel = () => {
-        navigate('/profile?role=ROLE_ADMIN');
+        navigate('/profile');
     };
     return (
         <div>

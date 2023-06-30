@@ -1,15 +1,21 @@
 import React, { useState, useRef, useEffect, useMemo, useCallback } from 'react';
 import { AgGridReact } from 'ag-grid-react'; // the AG Grid React Component
 import httpRequest from '~/utils/htppRequest';
+import { useForm } from 'react-hook-form';
 import 'ag-grid-community/styles/ag-grid.css'; // Core grid CSS, always needed
 import 'ag-grid-community/styles/ag-theme-alpine.css'; // Optional theme CSS
 import { useNavigate } from 'react-router-dom';
-const DEVICE_URL = '/device/list';
-
-const Service = () => {
+const DEVICE_URL = '/device/list-by-current-user';
+const REQUEST_URL = '/warrantycard/require';
+function DeviceByUsers() {
     const gridRef = useRef(); // Optional - for accessing Grid's API
     const [rowData, setRowData] = useState([]); // Set rowData to Array of Objects, one Object per Row
     const navigate = useNavigate();
+    const tenVien = localStorage.getItem('tenVien');
+    const tenPhong = localStorage.getItem('tenPhong');
+    const tenBan = localStorage.getItem('tenBan');
+    const [isOpenRequestPage, setIsOpenRequestPage] = useState(false);
+    const [dataRequest, setDataRequest] = useState([]);
     const columnDefs = useMemo(
         () => [
             { field: 'name', headerName: 'TÊN THIẾT BỊ', filter: true },
@@ -23,16 +29,18 @@ const Service = () => {
         ],
         [],
     );
-
-    // DefaultColDef sets props common to all Columns
+    const {
+        register,
+        handleSubmit,
+        reset,
+        formState: { errors },
+    } = useForm();
     const defaultColDef = useMemo(
         () => ({
             sortable: true,
         }),
         [],
     );
-
-    // Example of consuming Grid Event
     const cellClickedListener = useCallback((event) => {
         console.log('cellClicked', event);
     }, []);
@@ -40,7 +48,6 @@ const Service = () => {
     const rowClickedListener = useCallback((event) => {
         console.log('rowClicked', event);
     }, []);
-    // Example load data from server
     useEffect(() => {
         httpRequest
             .get(DEVICE_URL, { withCredentials: true })
@@ -53,41 +60,30 @@ const Service = () => {
                 console.log(err);
             });
     }, []);
-
+    useEffect(() => {
+        const handleContextMenu = (event) => {
+            event.preventDefault(); // Ngăn chặn hiển thị hộp thoại mặc định của trình duyệt
+        };
+        document.addEventListener('contextmenu', handleContextMenu);
+        return () => {
+            document.removeEventListener('contextmenu', handleContextMenu);
+        };
+    }, []);
     const cellContextMenuListener = useCallback((params) => {
         params.event.preventDefault();
         const selectedRow = params.node.data;
         const dataResponse = selectedRow;
         const options = {
-            update: {
-                name: 'Cập nhật thông tin',
-                action: () => handleUpdate(dataResponse),
-            },
-            export: {
-                name: 'Tạo phiếu xuất',
-                action: () => handleExport(dataResponse),
-            },
-            warrantyState: {
-                name: 'Chỉnh sửa trạng thái bảo hành',
-                action: () => handleWarrantyState(dataResponse),
-            },
-            maintainanceState: {
-                name: 'Chỉnh sửa trạng thái bảo trì',
-                action: () => handleMaintainanceState(dataResponse),
+            request: {
+                name: 'Yêu cầu bảo hành',
+                action: () => handleRequest(dataResponse),
             },
         };
         if (dataResponse.status === 'DA_XUAT') {
             delete options.export;
         }
-        if (dataResponse.warrantyStatus !== 'DANG_BAO_HANH') {
-            delete options.warrantyState;
-        }
-        if (dataResponse.maintenanceStatus !== 'CAN_BAO_TRI') {
-            delete options.maintainanceState;
-        }
         showContextMenu(params.event.clientX, params.event.clientY, options);
     }, []);
-
     const showContextMenu = (clientX, clientY, options) => {
         const contextMenuDiv = document.createElement('div');
         contextMenuDiv.id = 'customContextMenu';
@@ -125,60 +121,73 @@ const Service = () => {
 
         document.addEventListener('click', handleDocumentClick);
     };
+    const handleRequest = (data) => {
+        console.log(data);
+        setIsOpenRequestPage(true);
+        setDataRequest(data);
+    };
 
-    useEffect(() => {
-        const handleContextMenu = (event) => {
-            event.preventDefault(); // Ngăn chặn hiển thị hộp thoại mặc định của trình duyệt
+    const handleCancel = () => {
+        setIsOpenRequestPage(false);
+    };
+
+    const onSubmit = (data) => {
+        console.log(data.note);
+        console.log(dataRequest.serial);
+        const dataSend = {
+            note: data.note,
+            serial: dataRequest.serial,
         };
-        document.addEventListener('contextmenu', handleContextMenu);
-        return () => {
-            document.removeEventListener('contextmenu', handleContextMenu);
-        };
-    }, []);
-
-    const handleUpdate = (data) => {
-        navigate(`/updatedevice?serial=${data.serial}`);
+        httpRequest
+            .post(REQUEST_URL, dataSend, { withCredentials: true })
+            .then((response) => {
+                console.log(response.data);
+                alert('Gửi thành công');
+                setIsOpenRequestPage(false);
+                reset();
+            })
+            .catch((err) => {
+                console.log(err);
+            });
     };
-
-    const handleExport = (data) => {
-        navigate(`/exportdevice?serial=${data.serial}`);
-    };
-
-    const handleWarrantyState = (data) => {
-        navigate(`/handover?serial=${data.serial}`);
-    };
-
-    const handleMaintainanceState = (data) => {
-        console.log(1);
-    };
-
-    const handleAdd = (data) => {
-        navigate('/adddevice?role=ROLE_ADMIN');
-    };
-
-    const handleExportList = () => {
-        navigate('/exportlistdevice?role=ROLE_ADMIN');
-    };
-
     return (
         <div>
-            <button onClick={handleAdd}>Nhập thiết bị</button>
-            <button onClick={handleExportList}>Xuất thiết bị</button>
-            <button>Tìm kiếm </button>
-            <div className="ag-theme-alpine" style={{ width: 1500, height: 500 }}>
-                <AgGridReact
-                    ref={gridRef}
-                    rowData={rowData}
-                    columnDefs={columnDefs}
-                    defaultColDef={defaultColDef}
-                    animateRows={true}
-                    onCellClicked={cellClickedListener}
-                    onRowClicked={rowClickedListener}
-                    onCellContextMenu={cellContextMenuListener}
-                />
-            </div>
+            {!isOpenRequestPage ? (
+                <div className="ag-theme-alpine" style={{ width: 1500, height: 500 }}>
+                    <h1>
+                        Danh sách thiết bị thuộc phòng {tenPhong}, ban {tenBan}, viện {tenVien}
+                    </h1>
+                    <AgGridReact
+                        ref={gridRef}
+                        rowData={rowData}
+                        columnDefs={columnDefs}
+                        defaultColDef={defaultColDef}
+                        animateRows={true}
+                        onCellClicked={cellClickedListener}
+                        onRowClicked={rowClickedListener}
+                        onCellContextMenu={cellContextMenuListener}
+                    />
+                </div>
+            ) : (
+                <div>
+                    <h1>
+                        Yêu cầu bảo hành thiết bị {dataRequest.name}, serial {dataRequest.serial}
+                    </h1>
+                    <form onSubmit={handleSubmit(onSubmit)}>
+                        <input
+                            placeholder="Nhập yêu cầu bảo hành"
+                            {...register('note', {
+                                required: 'Vui lòng nhập yêu cầu bảo hành',
+                            })}
+                        />
+                        <p>{errors.note?.message}</p>
+                        <input type="submit" />
+                    </form>
+                    <button onClick={handleCancel}>Huỷ</button>
+                </div>
+            )}
         </div>
     );
-};
+}
 
-export default Service;
+export default DeviceByUsers;

@@ -3,6 +3,9 @@ import { useState, useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
 import httpRequest from '~/utils/htppRequest';
+import { AgGridReact } from 'ag-grid-react'; // the AG Grid React Component
+import 'ag-grid-community/styles/ag-grid.css'; // Core grid CSS, always needed
+import 'ag-grid-community/styles/ag-theme-alpine.css';
 import { read, utils, writeFile } from 'xlsx';
 const PHIEU_NHAP_URL = '/phieunhap/add';
 const AddDevice = () => {
@@ -16,12 +19,7 @@ const AddDevice = () => {
     const [deviceList, setDeviceList] = useState([]);
     const [seller, setSeller] = useState({});
     const [confirmSeller, setConfirmSeller] = useState(false);
-    useEffect(() => {
-        console.log(deviceList);
-    }, [deviceList]);
-    useEffect(() => {
-        console.log(seller);
-    }, [seller]);
+
     const onSubmitSeller = ({ fullname, phone, companyName }) => {
         const data = {
             fullname,
@@ -87,12 +85,13 @@ const AddDevice = () => {
                 categoryDescription: device.categoryDescription,
             })),
         };
+        console.log(resquestData);
         httpRequest
             .post(PHIEU_NHAP_URL, resquestData, { withCredentials: true })
             .then((response) => {
                 console.log(response);
                 alert('Tạo mới thành công');
-                navigate('/service?role=ROLE_ADMIN');
+                navigate('/service');
             })
             .catch((err) => {
                 console.log(err);
@@ -104,7 +103,7 @@ const AddDevice = () => {
         setConfirmSeller(false);
         setDeviceList([]);
         setSeller({});
-        navigate('/adddevice/?role=ROLE_ADMIN');
+        navigate('/adddevice');
     };
 
     const validatePhone = (value) => {
@@ -114,7 +113,6 @@ const AddDevice = () => {
         }
         return true;
     };
-
     const handleImportFile = (event) => {
         console.log('File Import');
         const files = event.target.files;
@@ -145,7 +143,6 @@ const AddDevice = () => {
             reader.readAsArrayBuffer(file);
         }
     };
-
     return (
         <form>
             {!confirmSeller ? (
@@ -227,26 +224,32 @@ const AddDevice = () => {
                         />
                         <p>{errors.maintenanceTime?.message}</p>
                         <input
-                            placeholder="ID danh mục"
-                            type="number"
-                            {...register('categoryId', {
-                                required: 'Vui lòng nhập ID danh mục',
+                            placeholder="Tên danh mục"
+                            {...register('categoryName', {
+                                required: 'Vui lòng nhập tên danh mục',
                             })}
                         />
-                        <p>{errors.categoryId?.message}</p>
+                        <p>{errors.categoryName?.message}</p>
+                        <input
+                            placeholder="Chi tiết sản phẩm"
+                            {...register('categoryDescription', {
+                                required: 'Vui lòng nhập chi tiết sản phẩm',
+                            })}
+                        />
+                        <p>{errors.categoryDescription?.message}</p>
                         <button type="submit" onClick={handleSubmit(handleSubmitDevice)}>
                             +
                         </button>
-                        <input
-                            type="file"
-                            name="file"
-                            className="custom-file-input"
-                            id="inputGroupFile"
-                            required
-                            onChange={handleImportFile}
-                            accept=".csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel"
-                        />
                     </div>
+                    <input
+                        type="file"
+                        name="file"
+                        className="custom-file-input"
+                        id="inputGroupFile"
+                        required
+                        onChange={handleImportFile}
+                        accept=".csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel"
+                    />
                     <button type="button" onClick={onSubmitAll}>
                         Tạo phiếu nhập
                     </button>

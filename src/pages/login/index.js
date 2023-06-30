@@ -43,10 +43,21 @@ const Login = () => {
                 setPassword('');
                 setSuccess(true);
                 if (response.data.roles[0] === 'ROLE_ADMIN') {
-                    navigate(`/profile?role=${response.data.roles[0]}`);
+                    navigate(`/profile`);
                 } else {
-                    navigate(`/service?role=${response.data.roles[0]}`);
+                    navigate(`/mainpage`);
                 }
+
+                localStorage.setItem('role', `${response.data.roles[0]}`);
+                localStorage.setItem('username', `${response.data.username}`);
+                localStorage.setItem('email', `${response.data.email}`);
+                localStorage.setItem('fullname', `${response.data.fullname}`);
+                localStorage.setItem('birthDate', `${response.data.birthDate}`);
+                localStorage.setItem('joinDate', `${response.data.joinDate}`);
+                localStorage.setItem('tenVien', `${response.data.tenVien}`);
+                localStorage.setItem('tenPhong', `${response.data.tenPhong}`);
+                localStorage.setItem('tenBan', `${response.data.tenBan}`);
+                localStorage.setItem('phone', `${response.data.phone}`);
             })
             .catch((err) => {
                 if (err.response?.status === 400) {
@@ -54,6 +65,10 @@ const Login = () => {
                 }
                 errRef.current.focus();
             });
+    };
+
+    const handleForgot = () => {
+        navigate('/resetpassword');
     };
 
     return (
@@ -102,8 +117,11 @@ const Login = () => {
                                         {errMsg}
                                     </p>
                                 </div>
-                                <button className={cx('login-button')}>Đăng nhập</button>
+                                <button type="submit" className={cx('login-button')}>
+                                    Đăng nhập
+                                </button>
                                 <div className={cx('login-box-footer')}></div>
+                                <button onClick={handleForgot}>Quên mật khẩu</button>
                             </div>
                         </form>
                     </div>
