@@ -1,53 +1,61 @@
 import styles from './Header.module.scss';
 import classNames from 'classnames/bind';
+import Button from '~/components/Button';
+import Tippy from '@tippyjs/react/headless';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faCircleXmark, faMagnifyingGlass, faSpinner } from '@fortawesome/free-solid-svg-icons';
+import { faCircleXmark, faMagnifyingGlass, faSpinner, faBell } from '@fortawesome/free-solid-svg-icons';
 import httpRequest from '~/utils/htppRequest';
+import NotificationItem from '~/components/NotificationItem';
 import { useLocation } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 
 const cx = classNames.bind(styles);
 
 function Header() {
     const navigate = useNavigate();
     const roles = localStorage.getItem('role');
-    console.log(roles);
     const [isHaveNoti, setIsHaveNoti] = useState(false);
     const [noti, setNoti] = useState([]);
+    const [isOpenNotiWrap, SetIsOpenNotiWrap] = useState(false);
+
     const handleGoToNoti = () => {
         navigate('/notification');
         setIsHaveNoti(false);
     };
-    useEffect(() => {
-        const fetchData = () => {
-            httpRequest
-                .get(`/warrantycard/list-unconfirm`, { withCredentials: true })
-                .then((response) => {
-                    const data = response.data;
-                    setNoti(data);
+    // useEffect(() => {
+    //     const fetchData = () => {
+    //         httpRequest
+    //             .get(`/warrantycard/list-unconfirm`, { withCredentials: true })
+    //             .then((response) => {
+    //                 const data = response.data;
+    //                 setNoti(data);
 
-                    if (JSON.stringify(data) !== JSON.stringify(noti)) {
-                        setIsHaveNoti(true);
-                    }
-                })
-                .catch((err) => {
-                    console.log(err);
-                });
-        };
+    //                 if (JSON.stringify(data) !== JSON.stringify(noti)) {
+    //                     setIsHaveNoti(true);
+    //                 }
+    //             })
+    //             .catch((err) => {
+    //                 console.log(err);
+    //             });
+    //     };
 
-        fetchData();
+    //     fetchData();
 
-        const intervalId = setInterval(fetchData, 5000);
+    //     const intervalId = setInterval(fetchData, 5000);
 
-        return () => {
-            clearInterval(intervalId);
-        };
-    }, []);
+    //     return () => {
+    //         clearInterval(intervalId);
+    //     };
+    // }, []);
+    console.log(isOpenNotiWrap);
     return (
         <header className={cx('wrapper')}>
             <div className={cx('inner')}>
                 <img
+                    onClick={() => {
+                        navigate('/service');
+                    }}
                     src="https://storage.googleapis.com/hust-files/5807675312963584/images/hust-logo-official_.3m.jpeg"
                     alt="logo"
                     className={cx('image-logo')}
@@ -62,23 +70,36 @@ function Header() {
                         <FontAwesomeIcon icon={faMagnifyingGlass} />
                     </button>
                 </div>
-                <select className={'select'} name="optionValues">
-                    <option value>Tìm kiếm theo</option>
-                    <option value="1">1</option>
-                </select>
-                <div className={cx('action')}></div>
 
-                {roles === 'ROLE_ADMIN' ? (
-                    <div>
-                        {isHaveNoti ? (
-                            <button onClick={handleGoToNoti}>Thông báo(!)</button>
-                        ) : (
-                            <button onClick={handleGoToNoti}>Thông báo</button>
-                        )}
+                <Tippy
+                    placement="bottom-end"
+                    visible={isOpenNotiWrap}
+                    onClickOutside={() => {
+                        SetIsOpenNotiWrap(false);
+                    }}
+                    interactive
+                    render={(attrs) => (
+                        <div className={cx('noti-content')} tabIndex="-1" {...attrs}>
+                            <div>
+                                <h4 className={cx('noti-content-header')}>Thông báo</h4>
+                                <div
+                                    onClick={() => {
+                                        navigate('/notification');
+                                    }}
+                                >
+                                    <NotificationItem />
+                                </div>
+                                <NotificationItem />
+                                <NotificationItem />
+                                <NotificationItem />
+                            </div>
+                        </div>
+                    )}
+                >
+                    <div className={cx('notiBell')}>
+                        <FontAwesomeIcon icon={faBell} onClick={() => SetIsOpenNotiWrap(!isOpenNotiWrap)} />
                     </div>
-                ) : (
-                    <p>d</p>
-                )}
+                </Tippy>
             </div>
         </header>
     );

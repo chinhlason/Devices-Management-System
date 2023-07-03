@@ -1,0 +1,24 @@
+.sidebar-option {
+    display: flex;
+    align-items: center;
+    padding: 8px;
+    font-size: 1.3rem;
+    font-weight: 700;
+    border-radius: 4px;
+    color: var(--text-color);
+    transition: background-color ease-in-out 200ms;
+    &:hover {
+        cursor: pointer;
+        opacity: 0.8;
+        background-color: rgba(228, 226, 226, 0.557);
+        border-radius: 10px;
+    }
+}
+.title {
+    color: black;
+    margin-left: 3px;
+}
+
+.icon {
+    display: flex;
+}

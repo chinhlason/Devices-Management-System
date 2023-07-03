@@ -2,7 +2,7 @@ import styles from './DefaultLayout.module.scss';
 import Header from '~/components/Layout/components/Header';
 import Sidebar from '../components/Sidebar/Sidebar';
 import classNames from 'classnames/bind';
-
+import Footer from '../components/Footer';
 const cx = classNames.bind(styles);
 
 function defaultLayout({ children }) {
@@ -13,6 +13,7 @@ function defaultLayout({ children }) {
                 <Sidebar />
                 <div className={cx('content')}>{children}</div>
             </div>
+            <Footer />
         </div>
     );
 }

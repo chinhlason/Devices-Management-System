@@ -17,7 +17,7 @@
     justify-content: space-between;
     height: 100%;
     width: var(--default-layout-witdh);
-    background-color: rgb(232, 72, 72);
+    background-color: rgb(153, 20, 15);
     // border: 1px solid rgb(56, 1, 1);
     // background-image: linear-gradient(to left, #de021f, rgb(254, 146, 146));
 }
@@ -29,6 +29,9 @@
     // padding: 5px;
     margin-top: 2px;
     box-shadow: 2px 2px 2px 0px rgba(0, 0, 0, 0.3);
+    &:hover {
+        cursor: pointer;
+    }
 }
 
 .search {
@@ -86,4 +89,35 @@ input:not(:placeholder-shown) ~ .search-btn {
     &:active {
         background-color: rgba(22, 24, 35, 0.06);
     }
+}
+
+.notiBell {
+    position: relative;
+    font-size: 40px;
+    right: 40px;
+    color: white;
+
+    &:hover {
+        cursor: pointer;
+        opacity: 0.8;
+    }
+}
+
+.noti-content {
+    width: 500px;
+    max-height: min((100vh - 96px) - 60px, 734px);
+    min-height: 100px;
+    padding-top: 8px;
+    border-radius: 8px;
+    background: rgb(255, 255, 255);
+    box-shadow: rgb(0 0 0 / 12%) 0px 2px 12px;
+    font-size: 20px;
+}
+
+.noti-content-header {
+    padding: 5px 12px;
+    font-size: 3rem;
+    font-weight: 600;
+    color: rgba(22, 24, 35, 0.5);
+    border-bottom: 1px black solid;
 }

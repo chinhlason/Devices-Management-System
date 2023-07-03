@@ -4,6 +4,12 @@ import httpRequest from '~/utils/htppRequest';
 import 'ag-grid-community/styles/ag-grid.css'; // Core grid CSS, always needed
 import 'ag-grid-community/styles/ag-theme-alpine.css'; // Optional theme CSS
 import { useNavigate } from 'react-router-dom';
+
+import styles from './service.module.scss';
+import classNames from 'classnames/bind';
+import Button from '~/components/Button';
+const cx = classNames.bind(styles);
+
 const DEVICE_URL = '/device/list';
 
 const Service = () => {
@@ -161,21 +167,33 @@ const Service = () => {
     };
 
     return (
-        <div>
-            <button onClick={handleAdd}>Nhập thiết bị</button>
-            <button onClick={handleExportList}>Xuất thiết bị</button>
-            <button>Tìm kiếm </button>
-            <div className="ag-theme-alpine" style={{ width: 1500, height: 500 }}>
-                <AgGridReact
-                    ref={gridRef}
-                    rowData={rowData}
-                    columnDefs={columnDefs}
-                    defaultColDef={defaultColDef}
-                    animateRows={true}
-                    onCellClicked={cellClickedListener}
-                    onRowClicked={rowClickedListener}
-                    onCellContextMenu={cellContextMenuListener}
-                />
+        <div className={cx('wrapper')}>
+            <div className={cx('back-ground-img')}></div>
+            <div className={cx('buttons')}>
+                <Button rounded onClick={handleAdd}>
+                    Nhập thiết bị
+                </Button>
+                <Button rounded onClick={handleExportList}>
+                    Xuất thiết bị
+                </Button>
+                <Button rounded>Tìm kiếm </Button>
+            </div>
+            <div className={cx('device-infor')}>
+                <h1>Bảng danh sách thiết bị </h1>
+                <div className={cx('table')}>
+                    <div className="ag-theme-alpine" style={{ width: 1610, height: 700, color: 'red' }}>
+                        <AgGridReact
+                            ref={gridRef}
+                            rowData={rowData}
+                            columnDefs={columnDefs}
+                            defaultColDef={defaultColDef}
+                            animateRows={true}
+                            onCellClicked={cellClickedListener}
+                            onRowClicked={rowClickedListener}
+                            onCellContextMenu={cellContextMenuListener}
+                        />
+                    </div>
+                </div>
             </div>
         </div>
     );

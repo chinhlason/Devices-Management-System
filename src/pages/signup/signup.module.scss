@@ -1,4 +1,50 @@
 .wrapper {
-    display: flex;
-    flex-direction: column;
+    position: relative;
+    background-color: white;
+    height: 920px;
+    width: 700px;
+    margin-left: auto;
+    margin-right: auto;
+    border-radius: 10px;
+    margin-top: 40px;
+}
+
+.button-cancel {
+    position: absolute;
+    left: 20px;
+    top: 40px;
+}
+
+.button-submit {
+    position: absolute;
+    right: 50px;
+    top: 40px;
+}
+
+.wrapper h2 {
+    margin: 0;
+    margin-left: 250px;
+    padding-top: 40px;
+}
+
+.form-boxs {
+    margin: 10px;
+    margin-left: 40px;
+    margin-top: 40px;
+}
+
+.form-boxs p {
+    color: red;
+    margin: 0;
+    margin-left: 20px;
+    margin-bottom: -15px;
+}
+
+.form-boxs input {
+    align-items: center;
+}
+
+.error {
+    color: red;
+    font-size: 20px;
 }

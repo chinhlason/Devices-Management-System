@@ -3,6 +3,12 @@ import httpRequest from '~/utils/htppRequest';
 import { useForm, Controller, formState } from 'react-hook-form';
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+
+import styles from './updateDevice.module.scss';
+import classNames from 'classnames/bind';
+import Button from '~/components/Button';
+const cx = classNames.bind(styles);
+
 const EXPORT_URL = '/phieuxuat/add';
 const DEVICE_URL = '/device/list';
 const USER_URL = '/user/list';
@@ -35,12 +41,12 @@ function UpdateDevices() {
     }, []);
     const onSubmit = (data) => {
         const requestData = {
-            name: data.name,
-            serial: data.serial,
-            price: data.price,
-            warrantyTime: data.warrantyTime,
-            maintenanceTime: data.maintenanceTime,
-            categoryId: data.categoryId,
+            name: data.name || deviceInfor?.name,
+            serial: data.serial || deviceInfor?.serial,
+            price: data.price || deviceInfor?.price,
+            warrantyTime: data.warrantyTime || deviceInfor?.warrantyTime,
+            maintenanceTime: data.maintenanceTime || deviceInfor?.maintenanceTime,
+            categoryId: data.categoryId || deviceInfor?.categoryId,
         };
         console.log(requestData);
         httpRequest
@@ -62,72 +68,70 @@ function UpdateDevices() {
     };
     return (
         <div>
-            <header>THAY ĐỔI THÔNG TIN THIẾT BỊ</header>
-            <form onSubmit={handleSubmit(onSubmit)}>
-                <input
-                    placeholder="Tên thiết bị"
-                    defaultValue={deviceInfor?.name}
-                    {...register('name', {
-                        required: 'Vui lòng nhập tên sản phẩm',
-                        minLength: {
-                            value: 3,
-                            message: 'Tối thiểu 3 kí tự',
-                        },
-                    })}
-                />
-                <p>{errors.name?.message}</p>
-                <input
-                    placeholder="Serial"
-                    defaultValue={deviceInfor?.serial}
-                    {...register('serial', {
-                        required: 'Vui lòng nhập Serial',
-                    })}
-                />
-                <p>{errors.serial?.message}</p>
+            <div className={cx('back-ground-img')}></div>
 
-                <input
-                    placeholder="Giá tiền"
-                    defaultValue={deviceInfor?.price}
-                    type="number"
-                    {...register('price', {
-                        required: 'Vui lòng nhập giá tiền',
-                    })}
-                />
-                <p>{errors.price?.message}</p>
-
-                <input
-                    placeholder="Thời gian bảo hành"
-                    defaultValue={deviceInfor?.warrantyTime}
-                    type="number"
-                    {...register('warrantyTime', {
-                        required: 'Vui lòng nhập thời gian bảo hành',
-                    })}
-                />
-                <p>{errors.warrantyTime?.message}</p>
-                <input
-                    placeholder="Chu kì bảo trì"
-                    defaultValue={deviceInfor?.maintenanceTime}
-                    type="number"
-                    {...register('maintenanceTime', {
-                        required: 'Vui lòng nhập chu kì bảo trì',
-                    })}
-                />
-                <p>{errors.maintenanceTime?.message}</p>
-
-                <input
-                    placeholder="ID Danh mục"
-                    defaultValue={deviceInfor?.categoryId}
-                    type="number"
-                    {...register('categoryId', {
-                        required: 'Vui lòng nhập ID Danh mục',
-                    })}
-                />
-                <p>{errors.categoryId?.message}</p>
-                <input type="submit" />
-            </form>
-            <button type onClick={handleCancel}>
-                Huỷ
-            </button>
+            <div className={cx('wrapper')}>
+                <h2>Thay đổi thông tin thiết bị</h2>
+                <form onSubmit={handleSubmit(onSubmit)} className={cx('form-boxs')}>
+                    <input
+                        className={cx('form-box')}
+                        placeholder="Tên thiết bị"
+                        defaultValue={deviceInfor?.name}
+                        {...register('name', {
+                            minLength: {
+                                value: 3,
+                                message: 'Tối thiểu 3 kí tự',
+                            },
+                        })}
+                    />
+                    <p>{errors.name?.message}</p>
+                    <input
+                        className={cx('form-box')}
+                        placeholder="Serial"
+                        defaultValue={deviceInfor?.serial}
+                        {...register('serial', {})}
+                    />
+                    <p>{errors.serial?.message}</p>
+                    <input
+                        className={cx('form-box')}
+                        placeholder="Giá tiền"
+                        defaultValue={deviceInfor?.price}
+                        type="number"
+                        {...register('price', {})}
+                    />
+                    <p>{errors.price?.message}</p>
+                    <input
+                        className={cx('form-box')}
+                        placeholder="Thời gian bảo hành"
+                        defaultValue={deviceInfor?.warrantyTime}
+                        type="number"
+                        {...register('warrantyTime', {})}
+                    />
+                    <p>{errors.warrantyTime?.message}</p>
+                    <input
+                        className={cx('form-box')}
+                        placeholder="Chu kì bảo trì"
+                        defaultValue={deviceInfor?.maintenanceTime}
+                        type="number"
+                        {...register('maintenanceTime', {})}
+                    />
+                    <p>{errors.maintenanceTime?.message}</p>
+                    <input
+                        className={cx('form-box')}
+                        placeholder="ID Danh mục"
+                        defaultValue={deviceInfor?.categoryId}
+                        type="number"
+                        {...register('categoryId', {})}
+                    />
+                    <p>{errors.categoryId?.message}</p>
+                    <Button className={cx('button-submit')} primary type="submit">
+                        Gửi
+                    </Button>
+                </form>
+                <Button className={cx('button-cancel')} primary type onClick={handleCancel}>
+                    Huỷ
+                </Button>
+            </div>
         </div>
     );
 }

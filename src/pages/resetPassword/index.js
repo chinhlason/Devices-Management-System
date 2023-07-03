@@ -4,6 +4,12 @@ import * as emailValidator from 'email-validator';
 import httpRequest from '~/utils/htppRequest';
 import { useNavigate } from 'react-router-dom';
 import { useEffect, useState } from 'react';
+
+import styles from './resetPassword.module.scss';
+import classNames from 'classnames/bind';
+import Button from '~/components/Button';
+const cx = classNames.bind(styles);
+
 function ResetPassword() {
     const navigate = useNavigate();
     const {
@@ -85,67 +91,85 @@ function ResetPassword() {
     };
     return (
         <>
-            {token !== null ? (
-                <div>
-                    {access ? (
+            <>
+                <div className={cx('back-ground-img')}></div>
+
+                <div className={cx('wrapper-3')}>
+                    {token !== null ? (
                         <div>
-                            <h1>Đặt lại mật khẩu</h1>
-                            <form onSubmit={handleSubmit(onSubmitNewPass)}>
-                                <input
-                                    placeholder="Nhập mật khẩu mới"
-                                    type="password"
-                                    {...register('newPassword', {
-                                        required: 'Vui lòng nhập mật khẩu mới',
-                                    })}
-                                />
-                                <p>{errors.newPassword?.message}</p>
-                                <input
-                                    placeholder="Nhập lại mật khẩu mới"
-                                    type="password"
-                                    {...register('reNewPassword', {
-                                        required: 'Vui lòng nhập lại mật khẩu',
-                                    })}
-                                />
-                                <p>{errors.reNewPassword?.message}</p>
-                                <button type="submit">Gửi</button>
-                            </form>
+                            {access ? (
+                                <div>
+                                    <h1>Đặt lại mật khẩu</h1>
+                                    <form onSubmit={handleSubmit(onSubmitNewPass)}>
+                                        <input
+                                            className={cx('form-box')}
+                                            placeholder="Nhập mật khẩu mới"
+                                            type="password"
+                                            {...register('newPassword', {
+                                                required: 'Vui lòng nhập mật khẩu mới',
+                                            })}
+                                        />
+                                        <p>{errors.newPassword?.message}</p>
+                                        <input
+                                            className={cx('form-box')}
+                                            placeholder="Nhập lại mật khẩu mới"
+                                            type="password"
+                                            {...register('reNewPassword', {
+                                                required: 'Vui lòng nhập lại mật khẩu',
+                                            })}
+                                        />
+                                        <p>{errors.reNewPassword?.message}</p>
+                                        <Button outline type="submit">
+                                            Gửi
+                                        </Button>
+                                    </form>
+                                </div>
+                            ) : (
+                                <div>
+                                    <h1 className={cx('link-broke')}>ĐƯỜNG DẪN HẾT HẠN </h1>
+                                    <Button
+                                        className={cx('button-back')}
+                                        primary
+                                        onClick={() => {
+                                            navigate('/resetpassword');
+                                        }}
+                                    >
+                                        Về trang nhập email
+                                    </Button>
+                                </div>
+                            )}
                         </div>
                     ) : (
                         <div>
-                            <h1>ĐƯỜNG DẪN HẾT HẠN hehe</h1>
-                            <button
+                            <form onSubmit={handleSubmit(onSubmit)} className={cx('form-box-submit')}>
+                                <h2>Đặt lại mật khẩu </h2>
+                                <input
+                                    className={cx('form-box-custom')}
+                                    placeholder="Email khôi phục"
+                                    type="email"
+                                    {...register('email', {
+                                        required: 'Vui lòng nhập Email',
+                                        validate: validateEmail,
+                                    })}
+                                />
+                                <p>{errors.email?.message}</p>
+                                <Button className={cx('button-submit')} outline type="submit">
+                                    Gửi
+                                </Button>
+                            </form>
+                            <Button
+                                className={cx('button-cancel')}
+                                outline
                                 onClick={() => {
-                                    navigate('/resetpassword');
+                                    navigate('/');
                                 }}
                             >
-                                Về trang nhập email
-                            </button>
+                                Huỷ
+                            </Button>
                         </div>
                     )}
                 </div>
-            ) : (
-                <div>
-                    <form onSubmit={handleSubmit(onSubmit)}>
-                        <input
-                            placeholder="Email khôi phục"
-                            type="email"
-                            {...register('email', {
-                                required: 'Vui lòng nhập Email',
-                                validate: validateEmail,
-                            })}
-                        />
-                        <p>{errors.email?.message}</p>
-                        <button type="submit">Gửi</button>
-                    </form>
-                    <button
-                        onClick={() => {
-                            navigate('/');
-                        }}
-                    >
-                        Huỷ
-                    </button>
-                </div>
-            )}
+            </>
         </>
     );
 }

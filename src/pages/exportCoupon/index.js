@@ -4,6 +4,12 @@ import httpRequest from '~/utils/htppRequest';
 import 'ag-grid-community/styles/ag-grid.css'; // Core grid CSS, always needed
 import 'ag-grid-community/styles/ag-theme-alpine.css'; // Optional theme CSS
 import { useNavigate } from 'react-router-dom';
+
+import styles from './exportCoupon.module.scss';
+import classNames from 'classnames/bind';
+import Button from '~/components/Button';
+const cx = classNames.bind(styles);
+
 const EXPORT_URL = '/phieuxuat/list';
 
 function ExportCoupon() {
@@ -55,16 +61,17 @@ function ExportCoupon() {
                 field: 'actions',
                 cellRenderer: ({ data }) => (
                     <div>
-                        <button
+                        <Button
+                            primary
                             onClick={() => {
                                 handleMenuClick(data);
                             }}
                         >
                             Xem chi tiết
-                        </button>
+                        </Button>
                     </div>
                 ),
-                width: 100,
+                width: 150,
                 suppressMenu: true,
                 sortable: false,
                 filter: false,
@@ -127,34 +134,48 @@ function ExportCoupon() {
     console.log(dataMiniPage);
     return (
         <>
+            <div className={cx('back-ground-img')}></div>
+
             {!isOpenMiniPage ? (
-                <div className="ag-theme-alpine" style={{ width: 1500, height: 500 }}>
-                    <h1>Danh sách phiếu xuất</h1>
-                    <AgGridReact
-                        ref={gridRef}
-                        rowData={rowData}
-                        columnDefs={columnDefs}
-                        defaultColDef={defaultColDef}
-                        animateRows={true}
-                    />
+                <div className={cx('wrapper')}>
+                    <div className={cx('table')}>
+                        <div className="ag-theme-alpine" style={{ width: 1360, height: 500 }}>
+                            <h1>Danh sách phiếu xuất</h1>
+                            <AgGridReact
+                                ref={gridRef}
+                                rowData={rowData}
+                                columnDefs={columnDefs}
+                                defaultColDef={defaultColDef}
+                                animateRows={true}
+                            />
+                        </div>
+                    </div>
                 </div>
             ) : (
-                <div className="ag-theme-alpine" style={{ width: 1500, height: 500 }}>
-                    <h1>Chi tiết phiếu xuất</h1>
-                    <p>ID phiếu xuất : {dataMiniPage.id}</p>
-                    <p>Người xuất : {dataMiniPage.exporter}</p>
-                    <p>Người nhận : {dataMiniPage.receiver}</p>
-                    <p>Ngày xuất : {dataMiniPage.exportDate}</p>
+                <div className={cx('wrapper-2')}>
+                    <div className={cx('infor-coupon')}>
+                        <h1>Chi tiết phiếu xuất</h1>
+                        <p>ID phiếu xuất : {dataMiniPage.id}</p>
+                        <p>Người xuất : {dataMiniPage.exporter}</p>
+                        <p>Người nhận : {dataMiniPage.receiver}</p>
+                        <p>Ngày xuất : {dataMiniPage.exportDate}</p>
+                    </div>
 
-                    <h2>Bảng thiết bị nhập({dataMiniPage.number})</h2>
-                    <AgGridReact
-                        ref={gridRef}
-                        rowData={dataMiniTable}
-                        columnDefs={columnDefsmini}
-                        defaultColDef={defaultColDef}
-                        animateRows={true}
-                    />
-                    <button onClick={handleCancel}>Huỷ</button>
+                    <div className={cx('table-2')}>
+                        <div className="ag-theme-alpine" style={{ width: 1010, height: 500 }}>
+                            <h2>Bảng thiết bị xuất({dataMiniPage.number})</h2>
+                            <AgGridReact
+                                ref={gridRef}
+                                rowData={dataMiniTable}
+                                columnDefs={columnDefsmini}
+                                defaultColDef={defaultColDef}
+                                animateRows={true}
+                            />
+                        </div>
+                    </div>
+                    <Button primary className={cx('button')} onClick={handleCancel}>
+                        Huỷ
+                    </Button>
                 </div>
             )}
         </>

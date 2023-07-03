@@ -1,0 +1,50 @@
+.wrapper {
+    position: relative;
+    background-color: white;
+    height: 600px;
+    width: 500px;
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 200px;
+    border-radius: 10px;
+}
+
+.user-infor {
+    margin: 20px;
+    margin-left: 40px;
+    font-size: 20px;
+}
+
+h1 {
+    margin: 10px;
+}
+
+.user-infor :first-child {
+    font-weight: bold;
+}
+
+.form-boxs p {
+    color: red;
+    margin-left: 40px;
+}
+
+.user-infor p {
+    margin: 5px;
+    color: black;
+}
+
+.button-left {
+    position: absolute;
+    left: 30px;
+    bottom: 30px;
+}
+
+.button-right {
+    position: absolute;
+    right: 30px;
+    bottom: 30px;
+}
+
+.form-boxs {
+    max-height: 200px;
+}

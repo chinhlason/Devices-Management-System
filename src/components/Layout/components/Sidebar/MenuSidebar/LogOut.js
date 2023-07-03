@@ -1,6 +1,6 @@
 import { NavLink } from 'react-router-dom';
 import classNames from 'classnames/bind';
-import styles from '../Sidebar.module.scss';
+import styles from './MenuSidebar.module.scss';
 import httpRequest from '~/utils/htppRequest';
 import { useNavigate } from 'react-router-dom';
 import { memo } from 'react';
@@ -31,7 +31,7 @@ function LogOut({ title, to }) {
             });
     };
     return (
-        <NavLink className={cx('user-profile')} to={to} onClick={handleClick}>
+        <NavLink className={cx('sidebar-option')} to={to} onClick={handleClick}>
             <span className={cx('title')}>{title}</span>
         </NavLink>
     );

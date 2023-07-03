@@ -7,6 +7,11 @@ import 'ag-grid-community/styles/ag-grid.css';
 import 'ag-grid-community/styles/ag-theme-alpine.css';
 import { useNavigate } from 'react-router-dom';
 
+import styles from './exportListDevices.module.scss';
+import classNames from 'classnames/bind';
+import Button from '~/components/Button';
+const cx = classNames.bind(styles);
+
 const EXPORT_URL = '/phieuxuat/add';
 const DEVICE_URL = '/device/list';
 const USER_URL = '/user/list';
@@ -109,7 +114,7 @@ function ExportListDevice() {
         console.log(newDataMiniPage);
         setRowDataMini(newDataMiniPage);
     };
-    console.log(rowData);
+    console.log(userInfor);
     const onSubmit = (data) => {
         const username = data.username;
         console.log(username);
@@ -125,76 +130,110 @@ function ExportListDevice() {
                     console.log(userInfor);
                 } else {
                     setIsExist(false);
+                    setUserInfor([]);
                 }
             })
             .catch((err) => {
                 console.log(err);
             });
     };
+    console.log(isAllow);
     return (
-        <div>
-            <h2>TẠO PHIẾU XUẤT</h2>
-            <form onSubmit={handleSubmit(onSubmit)}>
-                <input
-                    placeholder="Tên tài khoản người nhận"
-                    {...register('username', {
-                        required: 'Vui lòng nhập tên tài khoản',
-                        minLength: {
-                            value: 6,
-                            message: 'Tối thiểu 6 kí tự',
-                        },
-                    })}
-                />
-                <p>{errors.username?.message}</p>
-                <button type="submit">Kiểm tra người nhận</button>
-            </form>
-            {isExist ? (
-                <div>
-                    <p>Username: {userInfor.username}</p>
-                    <p>Tên người nhận: {userInfor.fullname}</p>
-                    <p>
-                        Phòng, Ban, Viện: {userInfor.tenPhong}, {userInfor.tenVien}, {userInfor.tenBan}
-                    </p>
-                </div>
-            ) : (
-                <p> Không tồn tại người dùng </p>
-            )}
-            {showMiniPage ? (
-                <div>
-                    <h2>Chọn thiết bị xuất kho</h2>
-                    <button onClick={handleAddList}>Thêm thiết bị</button>
-                    <button onClick={() => setShowMiniPage(false)}>Đóng</button>
-                    <div className="ag-theme-alpine" style={{ width: 1500, height: 500 }}>
-                        <AgGridReact
-                            ref={gridRef}
-                            rowData={rowDataMini}
-                            columnDefs={columnDefs}
-                            defaultColDef={defaultColDef}
-                            animateRows={true}
-                            enableRangeSelection={true}
-                            allowContextMenuWithControlKey={true}
-                            onRowClicked={rowClickedListener}
-                            getRowNodeId={(data) => data.serial}
-                            rowSelection="multiple"
+        <div className={cx('wrapper')}>
+            <div className={cx('content')}>
+                <div className={cx('back-ground-img')}></div>
+                <h1>Tạo phiếu xuất</h1>
+                <div className={cx('user-wrapper')}>
+                    <form onSubmit={handleSubmit(onSubmit)} className={cx('check-user')}>
+                        <input
+                            className={cx('form-box')}
+                            placeholder="Tên tài khoản người nhận"
+                            {...register('username', {
+                                required: 'Vui lòng nhập tên tài khoản',
+                                minLength: {
+                                    value: 6,
+                                    message: 'Tối thiểu 6 kí tự',
+                                },
+                            })}
                         />
+                        <p>{errors.username?.message}</p>
+                        <Button primary type="submit" className={cx('check-button')}>
+                            Kiểm tra người nhận
+                        </Button>
+                    </form>
+                    <div className={cx('user-infor')}>
+                        {isExist ? (
+                            <div>
+                                <p>Username: {userInfor.username}</p>
+                                <p>Tên người nhận: {userInfor.fullname}</p>
+                                <p>
+                                    Phòng : {userInfor.tenPhong}, Ban : {userInfor.tenBan}, Viện: {userInfor.tenVien}
+                                </p>
+                            </div>
+                        ) : (
+                            <p> Không tồn tại người dùng </p>
+                        )}
                     </div>
                 </div>
-            ) : (
-                <div className="ag-theme-alpine" style={{ width: 1500, height: 500 }}>
-                    <button onClick={handleAdd}>Thêm thiết bị</button>
-                    <AgGridReact
-                        columnDefs={columnDefs}
-                        ref={gridRef}
-                        rowData={rowData}
-                        defaultColDef={defaultColDef}
-                        animateRows={true}
-                        onRowClicked={rowClickedListener}
-                        rowSelection="multiple"
-                    />
-                    <button onClick={handleAddCoupon}>Tạo phiếu xuất</button>
-                    {!isAllow && <p>Vui lòng nhập đủ thông tin </p>}
-                </div>
-            )}
+                {showMiniPage ? (
+                    <div className={cx('tables')}>
+                        <div className={cx('table')}>
+                            <h2>Chọn thiết bị xuất kho</h2>
+                            <Button className={cx('button')} primary onClick={handleAddList}>
+                                Thêm thiết bị
+                            </Button>
+                            <Button className={cx('button')} primary onClick={() => setShowMiniPage(false)}>
+                                Đóng
+                            </Button>
+                            <div className="ag-theme-alpine" style={{ width: 1700, height: 500 }}>
+                                <AgGridReact
+                                    ref={gridRef}
+                                    rowData={rowDataMini}
+                                    columnDefs={columnDefs}
+                                    defaultColDef={defaultColDef}
+                                    animateRows={true}
+                                    enableRangeSelection={true}
+                                    allowContextMenuWithControlKey={true}
+                                    onRowClicked={rowClickedListener}
+                                    getRowNodeId={(data) => data.serial}
+                                    rowSelection="multiple"
+                                />
+                            </div>
+                        </div>
+                    </div>
+                ) : (
+                    <div className={cx('table')}>
+                        <h2>Danh sách thiết bị xuất kho</h2>
+                        <div className="ag-theme-alpine" style={{ width: 1700, height: 500 }}>
+                            <Button className={cx('button')} primary onClick={handleAdd}>
+                                Thêm thiết bị
+                            </Button>
+                            <AgGridReact
+                                columnDefs={columnDefs}
+                                ref={gridRef}
+                                rowData={rowData}
+                                defaultColDef={defaultColDef}
+                                animateRows={true}
+                                onRowClicked={rowClickedListener}
+                                rowSelection="multiple"
+                            />
+                        </div>
+                    </div>
+                )}
+            </div>
+            <Button primary className={cx('button-submit')} onClick={handleAddCoupon}>
+                Tạo phiếu xuất
+            </Button>
+            <Button
+                className={cx('button-back')}
+                primary
+                onClick={() => {
+                    navigate('/service');
+                }}
+            >
+                Quay lại
+            </Button>
+            {!isAllow && <p className={cx('noti')}>Vui lòng nhập đủ thông tin!!!! </p>}
         </div>
     );
 }

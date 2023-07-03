@@ -5,6 +5,11 @@ import * as emailValidator from 'email-validator';
 import httpRequest from '~/utils/htppRequest';
 import { useNavigate } from 'react-router-dom';
 
+import styles from './signup.module.scss';
+import classNames from 'classnames/bind';
+import Button from '~/components/Button';
+const cx = classNames.bind(styles);
+
 const SIGN_UP_URL = '/auth/signup';
 function SignUp() {
     const navigate = useNavigate();
@@ -25,7 +30,6 @@ function SignUp() {
             fullname: data.fullname,
             birthDate: data.birthDate,
             phone: data.phone,
-            joinDate: data.joinDate,
             tenVien: data.tenVien,
             tenPhong: data.tenPhong,
             tenBan: data.tenBan,
@@ -40,7 +44,7 @@ function SignUp() {
             })
             .then((response) => {
                 console.log(response);
-                alert('thanh cong');
+                alert('Tạo mới thành công');
                 navigate('/profile');
             })
             .catch((err) => {
@@ -62,118 +66,134 @@ function SignUp() {
     };
     return (
         <div>
-            <header>TẠO TÀI KHOẢN NGƯỜI DÙNG</header>
-            <form onSubmit={handleSubmit(onSubmit)}>
-                <input
-                    placeholder="Tên tài khoản"
-                    {...register('username', {
-                        required: 'Vui lòng nhập tên tài khoản',
-                        minLength: {
-                            value: 6,
-                            message: 'Tối thiểu 6 kí tự',
-                        },
-                    })}
-                />
-                <p>{errors.username?.message}</p>
-                <input
-                    placeholder="Mật khẩu"
-                    type="password"
-                    {...register('password', {
-                        required: 'Vui lòng nhập mật khẩu',
-                        minLength: {
-                            value: 6,
-                            message: 'Tối thiểu 6 kí tự',
-                        },
-                    })}
-                />
-                <p>{errors.password?.message}</p>
-                <Controller
-                    name="role"
-                    control={control}
-                    render={({ field }) => (
-                        <Select
-                            {...field}
-                            options={[
-                                { value: ['admin'], label: 'ADMIN' },
-                                { value: ['user'], label: 'Người dùng' },
-                            ]}
+            <div className={cx('back-ground-img')}></div>
+
+            <div className={cx('wrapper')}>
+                <h2>Tạo tài khoản</h2>
+                <form onSubmit={handleSubmit(onSubmit)} className={cx('form-boxs')}>
+                    <small className={cx('error')}>
+                        {errors.username?.message ||
+                            errors.password?.message ||
+                            errors.fullname?.message ||
+                            errors.email?.message ||
+                            errors.birthDate?.message ||
+                            errors.tenVien?.message ||
+                            errors.tenPhong?.message ||
+                            errors.tenBan?.message}
+                    </small>
+                    <p>(*)</p>
+                    <input
+                        className={cx('form-box')}
+                        placeholder="Tên tài khoản"
+                        {...register('username', {
+                            required: 'Vui lòng nhập đầy đủ thông tin',
+                            minLength: {
+                                value: 6,
+                                message: 'Tối thiểu 6 kí tự',
+                            },
+                        })}
+                    />
+                    <p>(*)</p>
+
+                    <input
+                        className={cx('form-box')}
+                        placeholder="Mật khẩu"
+                        type="password"
+                        {...register('password', {
+                            required: 'Vui lòng nhập đầy đủ thông tin',
+                            minLength: {
+                                value: 6,
+                                message: 'Tối thiểu 6 kí tự',
+                            },
+                        })}
+                    />
+                    <p>(*)</p>
+
+                    <div className={cx('form-box-select')}>
+                        <Controller
+                            name="role"
+                            control={control}
+                            render={({ field }) => (
+                                <Select
+                                    {...field}
+                                    options={[
+                                        { value: ['admin'], label: 'ADMIN' },
+                                        { value: ['user'], label: 'Người dùng' },
+                                    ]}
+                                />
+                            )}
                         />
-                    )}
-                />
-                <input
-                    placeholder="Tên người dùng"
-                    {...register('fullname', {
-                        required: 'Vui lòng nhập tên người dùng',
-                        minLength: {
-                            value: 6,
-                            message: 'Tối thiểu 6 kí tự',
-                        },
-                    })}
-                />
-                <p>{errors.fullname?.message}</p>
-                <input
-                    placeholder="Email"
-                    type="email"
-                    {...register('email', {
-                        required: 'Vui lòng nhập Email',
-                        validate: validateEmail,
-                    })}
-                />
-                <p>{errors.email?.message}</p>
+                    </div>
+                    <p>(*)</p>
 
-                <input
-                    placeholder="Ngày sinh"
-                    type="date"
-                    {...register('birthDate', {
-                        required: 'Vui lòng nhập ngày sinh',
-                    })}
-                />
-                <p>{errors.birthDate?.message}</p>
+                    <input
+                        className={cx('form-box')}
+                        placeholder="Tên người dùng"
+                        {...register('fullname', {
+                            required: 'Vui lòng nhập đầy đủ thông tin',
+                            minLength: {
+                                value: 6,
+                                message: 'Tối thiểu 6 kí tự',
+                            },
+                        })}
+                    />
+                    <p>(*)</p>
 
-                <input
-                    placeholder="Số điện thoại"
-                    type="number"
-                    {...register('phone', {
-                        required: 'Vui lòng nhập số điện thoại',
-                        validate: validatePhone,
-                    })}
-                />
-                <p>{errors.phone?.message}</p>
+                    <input
+                        className={cx('form-box')}
+                        placeholder="Email"
+                        type="email"
+                        {...register('email', {
+                            required: 'Vui lòng nhập đầy đủ thông tin',
+                            validate: validateEmail,
+                        })}
+                    />
+                    <p>Ngày sinh (*)</p>
+                    <input
+                        className={cx('form-box')}
+                        placeholder="Ngày sinh"
+                        type="date"
+                        {...register('birthDate', {
+                            required: 'Vui lòng nhập đầy đủ thông tin',
+                        })}
+                    />
+                    <p>(*)</p>
 
-                <input
-                    placeholder="Ngày tạo tài khoản"
-                    type="date"
-                    {...register('joinDate', {
-                        required: 'Vui lòng nhập ngày tạo tài khoản',
-                    })}
-                />
-                <p>{errors.joinDate?.message}</p>
+                    <input
+                        className={cx('form-box')}
+                        placeholder="Số điện thoại"
+                        type="number"
+                        {...register('phone', {
+                            required: 'Vui lòng nhập đầy đủ thông tin',
+                            validate: validatePhone,
+                        })}
+                    />
+                    <p>(*)</p>
 
-                <input
-                    placeholder="Tên viện"
-                    {...register('tenVien', {
-                        required: 'Vui lòng nhập tên Viện',
-                    })}
-                />
-                <p>{errors.tenVien?.message}</p>
+                    <input
+                        className={cx('form-box')}
+                        placeholder="Tên viện"
+                        {...register('tenVien', {
+                            required: 'Vui lòng nhập đầy đủ thông tin',
+                        })}
+                    />
+                    <input className={cx('form-box')} placeholder="Tên phòng" {...register('tenPhong')} />
+                    <input className={cx('form-box')} placeholder="Tên Ban" {...register('tenBan')} />
+                    <Button className={cx('button-submit')} primary type="submit">
+                        Gửi
+                    </Button>
 
-                <input
-                    placeholder="Tên phòng"
-                    {...register('tenPhong', {
-                        required: 'Vui lòng nhập tên phòng',
-                    })}
-                />
-                <p>{errors.tenPhong?.message}</p>
-
-                <input
-                    placeholder="Tên Ban"
-                    {...register('tenBan', {
-                        required: 'Vui lòng nhập tên Ban',
-                    })}
-                />
-                <p>{errors.tenBan?.message}</p>
-                <input type="submit" />
-            </form>
+                    <Button
+                        className={cx('button-cancel')}
+                        primary
+                        onClick={() => {
+                            navigate('/profile');
+                        }}
+                    >
+                        Quay lại
+                    </Button>
+                </form>
+            </div>
         </div>
     );
 }

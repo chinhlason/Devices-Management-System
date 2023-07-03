@@ -5,6 +5,12 @@ import 'ag-grid-community/styles/ag-grid.css'; // Core grid CSS, always needed
 import 'ag-grid-community/styles/ag-theme-alpine.css'; // Optional theme CSS
 import { useNavigate } from 'react-router-dom';
 import { useLocation } from 'react-router-dom';
+
+import styles from './categoryDevice.module.scss';
+import classNames from 'classnames/bind';
+import Button from '~/components/Button';
+const cx = classNames.bind(styles);
+
 const CATEGORY_URL = '/category/list';
 
 function CategoryDevice() {
@@ -54,18 +60,23 @@ function CategoryDevice() {
     }, [category]);
     return (
         <div>
-            <div className="ag-theme-alpine" style={{ width: 1500, height: 500 }}>
-                <AgGridReact
-                    ref={gridRef}
-                    rowData={rowData}
-                    columnDefs={columnDefs}
-                    defaultColDef={defaultColDef}
-                    animateRows={true}
-                    onCellClicked={cellClickedListener}
-                    onRowClicked={rowClickedListener}
-                />
+            <div className={cx('back-ground-img')}></div>
+            <div className={cx('wrapper')}>
+                <div className={cx('table')}>
+                    <div className="ag-theme-alpine" style={{ width: 1610, height: 630 }}>
+                        <h1>Danh sách sản phẩm thuộc danh mục {category}</h1>
+                        <AgGridReact
+                            ref={gridRef}
+                            rowData={rowData}
+                            columnDefs={columnDefs}
+                            defaultColDef={defaultColDef}
+                            animateRows={true}
+                            onCellClicked={cellClickedListener}
+                            onRowClicked={rowClickedListener}
+                        />
+                    </div>
+                </div>
             </div>
-            ;
         </div>
     );
 }

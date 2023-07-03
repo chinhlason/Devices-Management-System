@@ -4,6 +4,12 @@ import httpRequest from '~/utils/htppRequest';
 import 'ag-grid-community/styles/ag-grid.css'; // Core grid CSS, always needed
 import 'ag-grid-community/styles/ag-theme-alpine.css'; // Optional theme CSS
 import { useNavigate } from 'react-router-dom';
+
+import styles from './warrantyCoupon.module.scss';
+import classNames from 'classnames/bind';
+import Button from '~/components/Button';
+const cx = classNames.bind(styles);
+
 const WARRANTY_URL = '/warrantycard/list';
 function WarrantyCoupon() {
     const gridRef = useRef();
@@ -65,14 +71,14 @@ function WarrantyCoupon() {
 
     const columnDefs = useMemo(
         () => [
-            { field: 'id', headerName: 'ID', filter: true },
-            { field: 'date', headerName: 'Ngày tạo phiếu', filter: true },
-            { field: 'handoverDate', headerName: 'Ngày bàn giao', filter: true },
-            { field: 'receiver', headerName: 'Người yêu cầu', filter: true },
-            { field: 'confirmer', headerName: 'Người xác nhận' },
-            { field: 'note', headerName: 'Ghi chú', filter: true },
+            { field: 'id', headerName: 'ID', filter: true, width: 120 },
+            { field: 'date', headerName: 'Ngày tạo phiếu', filter: true, width: 160 },
+            { field: 'handoverDate', headerName: 'Ngày bàn giao', filter: true, width: 160 },
+            { field: 'receiver', headerName: 'Người yêu cầu', filter: true, width: 150 },
+            { field: 'confirmer', headerName: 'Người xác nhận', filter: true, width: 160 },
+            { field: 'note', headerName: 'Ghi chú', filter: true, width: 160 },
             { field: 'name', headerName: 'Tên sản phẩm', filter: true },
-            { field: 'serial', headerName: 'Serial', filter: true },
+            { field: 'serial', headerName: 'Serial', filter: true, width: 120 },
             { field: 'status', headerName: 'Trạng thái bảo hành', filter: true },
             { field: 'confirmStatus', headerName: 'Trạng thái xác nhận', filter: true },
             {
@@ -80,16 +86,17 @@ function WarrantyCoupon() {
                 field: 'actions',
                 cellRenderer: ({ data }) => (
                     <div>
-                        <button
+                        <Button
+                            primary
                             onClick={() => {
                                 handleMenuClick(data);
                             }}
                         >
                             Xem chi tiết
-                        </button>
+                        </Button>
                     </div>
                 ),
-                width: 100,
+                width: 150,
                 suppressMenu: true,
                 sortable: false,
                 filter: false,
@@ -139,36 +146,51 @@ function WarrantyCoupon() {
     };
     return (
         <>
+            <div className={cx('back-ground-img')}></div>
+
             {!isOpenMiniPage ? (
-                <div className="ag-theme-alpine" style={{ width: 1500, height: 500 }}>
-                    <h1>Danh sách phiếu bảo hành</h1>
-                    <AgGridReact
-                        ref={gridRef}
-                        rowData={rowData}
-                        columnDefs={columnDefs}
-                        defaultColDef={defaultColDef}
-                        animateRows={true}
-                    />
+                <div className={cx('wrapper')}>
+                    <div className={cx('table')}>
+                        <div className="ag-theme-alpine" style={{ width: 1790, height: 650 }}>
+                            <h1>Danh sách phiếu bảo hành</h1>
+                            <AgGridReact
+                                ref={gridRef}
+                                rowData={rowData}
+                                columnDefs={columnDefs}
+                                defaultColDef={defaultColDef}
+                                animateRows={true}
+                            />
+                        </div>
+                    </div>
                 </div>
             ) : (
-                <div className="ag-theme-alpine" style={{ width: 1500, height: 100 }}>
-                    <h1>Chi tiết phiếu bảo hành</h1>
-                    <p>ID phiếu bảo hành : {dataMiniPage.id}</p>
-                    <p>Ngày tạo phiếu : {dataMiniPage.date}</p>
-                    <p>Ngày bàn giao : {dataMiniPage.handoverDate}</p>
-                    <p>Người yêu cầu : {dataMiniPage.receiver}</p>
-                    <p>Người xác nhận: {dataMiniPage.confirmer}</p>
-                    <p>Ghi chú : {dataMiniPage.note}</p>
-                    <p>Trạng thái bảo hành : {dataMiniPage.status}</p>
-                    <p>Trạng thái xác nhận : {dataMiniPage.confirmStatus}</p>
-                    <AgGridReact
-                        ref={gridRef}
-                        rowData={dataMiniTable}
-                        columnDefs={columnDefsmini}
-                        defaultColDef={defaultColDef}
-                        animateRows={true}
-                    />
-                    <button onClick={handleCancel}>Huỷ</button>
+                <div className={cx('wrapper-2')}>
+                    <div className={cx('infor-coupon')}>
+                        <h1>Chi tiết phiếu bảo hành</h1>
+                        <p>ID phiếu bảo hành : {dataMiniPage.id}</p>
+                        <p>Ngày tạo phiếu : {dataMiniPage.date}</p>
+                        <p>Ngày bàn giao : {dataMiniPage.handoverDate}</p>
+                        <p>Người yêu cầu : {dataMiniPage.receiver}</p>
+                        <p>Người xác nhận: {dataMiniPage.confirmer}</p>
+                        <p>Ghi chú : {dataMiniPage.note}</p>
+                        <p>Trạng thái bảo hành : {dataMiniPage.status}</p>
+                        <p>Trạng thái xác nhận : {dataMiniPage.confirmStatus}</p>
+                    </div>
+                    <div className={cx('table-2')}>
+                        <div className="ag-theme-alpine" style={{ width: 1430, height: 495 }}>
+                            <h2>Bảng thiết bị bảo hành</h2>
+                            <AgGridReact
+                                ref={gridRef}
+                                rowData={dataMiniTable}
+                                columnDefs={columnDefsmini}
+                                defaultColDef={defaultColDef}
+                                animateRows={true}
+                            />
+                        </div>
+                        <Button className={cx('button')} primary onClick={handleCancel}>
+                            Quay lại
+                        </Button>
+                    </div>
                 </div>
             )}
         </>

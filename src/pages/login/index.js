@@ -43,7 +43,7 @@ const Login = () => {
                 setPassword('');
                 setSuccess(true);
                 if (response.data.roles[0] === 'ROLE_ADMIN') {
-                    navigate(`/profile`);
+                    navigate(`/service`);
                 } else {
                     navigate(`/mainpage`);
                 }
@@ -121,7 +121,9 @@ const Login = () => {
                                     Đăng nhập
                                 </button>
                                 <div className={cx('login-box-footer')}></div>
-                                <button onClick={handleForgot}>Quên mật khẩu</button>
+                                <button className={cx('button-forgot')} onClick={handleForgot}>
+                                    Quên mật khẩu
+                                </button>
                             </div>
                         </form>
                     </div>

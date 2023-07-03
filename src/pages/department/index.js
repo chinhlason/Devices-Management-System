@@ -1,9 +1,15 @@
-import React, { useState, useRef, useEffect, useMemo, useCallback } from 'react';
+import React, { useState, useRef, useEffect, useMemo } from 'react';
 import { AgGridReact } from 'ag-grid-react';
 import httpRequest from '~/utils/htppRequest';
 import 'ag-grid-community/styles/ag-grid.css';
 import 'ag-grid-community/styles/ag-theme-alpine.css';
 import { useNavigate } from 'react-router-dom';
+
+import styles from './department.module.scss';
+import classNames from 'classnames/bind';
+import Button from '~/components/Button';
+const cx = classNames.bind(styles);
+
 const USER_URL = '/user/list';
 const EXPORT_URL = '/phieuxuat/list';
 function Department() {
@@ -28,17 +34,20 @@ function Department() {
                 field: 'actions',
                 cellRenderer: ({ data }) => (
                     <div>
-                        <button
+                        <Button
+                            className={cx('button')}
+                            primary
                             onClick={() => {
                                 handleMenuClick(data);
                                 setRowChose(data);
                             }}
                         >
                             Xem chi tiết
-                        </button>
+                        </Button>
                     </div>
                 ),
-                width: 100,
+                width: 150,
+                height: 40,
                 suppressMenu: true,
                 sortable: false,
                 filter: false,
@@ -131,29 +140,40 @@ function Department() {
 
     return (
         <>
+            <div className={cx('back-ground-img')}></div>
+
             {!isOpenMiniPage ? (
-                <div className="ag-theme-alpine" style={{ width: 1500, height: 500 }}>
-                    <AgGridReact
-                        ref={gridRef}
-                        rowData={rowData}
-                        columnDefs={columnDefs}
-                        defaultColDef={defaultColDef}
-                        animateRows={true}
-                    />
+                <div className={cx('wrapper')}>
+                    <div className={cx('table')}>
+                        <div className="ag-theme-alpine" style={{ width: 1360, height: 650 }}>
+                            <h1>Danh sách phòng ban</h1>
+                            <AgGridReact
+                                ref={gridRef}
+                                rowData={rowData}
+                                columnDefs={columnDefs}
+                                defaultColDef={defaultColDef}
+                                animateRows={true}
+                            />
+                        </div>
+                    </div>
                 </div>
             ) : (
-                <div className="ag-theme-alpine" style={{ width: 1500, height: 500 }}>
-                    <h1>
-                        Chi tiết thiết bị phòng {rowChose.tenPhong}, ban {rowChose.tenBan}, viện {rowChose.tenVien}
-                    </h1>
-                    <AgGridReact
-                        ref={gridRef}
-                        rowData={dataMiniPage}
-                        columnDefs={columnDefsmini}
-                        defaultColDef={defaultColDef}
-                        animateRows={true}
-                    />
-                    <button onClick={handleCancel}>Huỷ</button>
+                <div className={cx('wrapper-2')}>
+                    <div className="ag-theme-alpine" style={{ width: 1810, height: 500 }}>
+                        <h1>
+                            Chi tiết thiết bị phòng {rowChose.tenPhong}, ban {rowChose.tenBan}, viện {rowChose.tenVien}
+                        </h1>
+                        <AgGridReact
+                            ref={gridRef}
+                            rowData={dataMiniPage}
+                            columnDefs={columnDefsmini}
+                            defaultColDef={defaultColDef}
+                            animateRows={true}
+                        />
+                        <Button className={cx('button-2')} primary onClick={handleCancel}>
+                            Huỷ
+                        </Button>
+                    </div>
                 </div>
             )}
         </>
