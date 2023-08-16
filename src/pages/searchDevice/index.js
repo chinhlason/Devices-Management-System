@@ -4,20 +4,70 @@ import httpRequest from '~/utils/htppRequest';
 import 'ag-grid-community/styles/ag-grid.css'; // Core grid CSS, always needed
 import 'ag-grid-community/styles/ag-theme-alpine.css'; // Optional theme CSS
 import { useNavigate } from 'react-router-dom';
-
-import styles from './service.module.scss';
+import { useForm, Controller } from 'react-hook-form';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faMagnifyingGlass } from '@fortawesome/free-solid-svg-icons';
+import styles from './searchDevice.module.scss';
 import classNames from 'classnames/bind';
 import Button from '~/components/Button';
+import { createBrowserHistory } from 'history';
+import clsx from 'clsx';
 const cx = classNames.bind(styles);
 
 const DEVICE_URL = '/device/list';
-
-const Service = () => {
+let INPUT_URL;
+function SearchDevice() {
+    const history = createBrowserHistory();
+    const {
+        register,
+        handleSubmit,
+        control,
+        formState: { errors },
+    } = useForm();
     const gridRef = useRef(); // Optional - for accessing Grid's API
     const [rowData, setRowData] = useState([]); // Set rowData to Array of Objects, one Object per Row
     const [showDetail, setShowDetail] = useState(false);
     const [showInfor, setShowInfor] = useState([]);
     const navigate = useNavigate();
+    const previousPage = localStorage.getItem('previousPage');
+    const onSubmit = (data) => {
+        if (previousPage === 'service') {
+            INPUT_URL = '/device/list';
+        } else if (previousPage === 'mainpage') {
+            INPUT_URL = '/device?data=TRONG_KHO&type=status';
+        } else if (previousPage === 'devicebyuser') {
+            INPUT_URL = `/device/list-by-current-user`;
+        } else {
+            INPUT_URL = `/device/list-by-category-name?categoryName=${previousPage}`;
+        }
+        httpRequest
+            .get(INPUT_URL, { withCredentials: true })
+            .then((response) => {
+                const data_input = response.data;
+                const input = data.input;
+                const option = data.input_option;
+                if (option === 'name') {
+                    const filteredDevices = data_input.filter((device) => device.name.includes(input));
+                    console.log('checked1', filteredDevices);
+                    if (filteredDevices.length > 0) {
+                        setRowData(filteredDevices);
+                    } else {
+                        alert('Không tìm được sản phẩm tương ứng!');
+                    }
+                } else {
+                    const filteredDevices = data_input.filter((device) => device.serial.includes(input));
+                    console.log('checked2', filteredDevices);
+                    if (filteredDevices.length > 0) {
+                        setRowData(filteredDevices);
+                    } else {
+                        alert('Không tìm được sản phẩm tương ứng!');
+                    }
+                }
+            })
+            .catch((err) => {
+                console.log(err);
+            });
+    };
 
     const columnDefs = useMemo(
         () => [
@@ -46,18 +96,6 @@ const Service = () => {
 
     const rowClickedListener = useCallback((event) => {
         console.log('rowClicked', event);
-    }, []);
-    useEffect(() => {
-        httpRequest
-            .get(DEVICE_URL, { withCredentials: true })
-            .then((response) => {
-                const data = response.data; // Assuming the response is an array of objects
-                setRowData(data);
-                console.log(data);
-            })
-            .catch((err) => {
-                console.log(err);
-            });
     }, []);
 
     const cellContextMenuListener = useCallback((params) => {
@@ -93,6 +131,12 @@ const Service = () => {
             delete options.warrantyState;
         }
         if (dataResponse.maintenanceStatus !== 'CAN_BAO_TRI') {
+            delete options.maintainanceState;
+        }
+        if (previousPage === 'mainpage') {
+            delete options.export;
+            delete options.update;
+            delete options.warrantyState;
             delete options.maintainanceState;
         }
         showContextMenu(params.event.clientX, params.event.clientY, options);
@@ -171,8 +215,17 @@ const Service = () => {
     };
 
     const handleDetail = (serial) => {
+        if (previousPage === 'service') {
+            INPUT_URL = '/device/list';
+        } else if (previousPage === 'mainpage') {
+            INPUT_URL = '/device?data=TRONG_KHO&type=status';
+        } else if (previousPage === 'devicebyuser') {
+            INPUT_URL = `/device/list-by-current-user`;
+        } else {
+            INPUT_URL = `/device/list-by-category-name?categoryName=${previousPage}`;
+        }
         httpRequest
-            .get(DEVICE_URL, { withCredentials: true })
+            .get(INPUT_URL, { withCredentials: true })
             .then((response) => {
                 const data = response.data; // Assuming the response is an array of objects
                 const result = data.find((element) => {
@@ -186,54 +239,75 @@ const Service = () => {
             });
         setShowDetail(true);
     };
-    console.log('check', showInfor);
-    localStorage.setItem('previousPage', 'service');
+    console.log('trang trc', previousPage);
     return (
         <div className={cx('wrapper')}>
             <div className={cx('back-ground-img')}></div>
+            <div
+                className={cx('overlay', { show: showDetail })}
+                onClick={() => {
+                    setShowDetail(false);
+                }}
+            ></div>
+
             <div className={cx('table', { hide: showDetail })}>
-                <div
-                    className={cx('overlay', { show: showDetail })}
+                <Button
+                    primary
+                    className={cx('cancel-btn')}
                     onClick={() => {
-                        setShowDetail(false);
+                        history.back();
                     }}
-                ></div>
-                <div className={cx('wrapper-1')}>
-                    <div className={cx('buttons')}>
-                        <Button rounded onClick={handleAdd}>
-                            Nhập thiết bị
-                        </Button>
-                        <Button rounded onClick={handleExportList}>
-                            Xuất thiết bị
-                        </Button>
-                        <Button
-                            rounded
-                            onClick={() => {
-                                navigate('/search');
-                            }}
-                        >
-                            Tìm kiếm{' '}
-                        </Button>
+                >
+                    X
+                </Button>
+                <form onSubmit={handleSubmit(onSubmit)} className={cx('search-container')}>
+                    <div className={cx('menu')}>
+                        <label>Tìm kiếm theo :</label>
+                        <Controller
+                            name="input_option"
+                            control={control}
+                            defaultValue=""
+                            render={({ field }) => (
+                                <select {...field} className={cx('select')}>
+                                    <option value="serial">Serial</option>
+                                    <option value="name">Tên</option>
+                                </select>
+                            )}
+                        />
                     </div>
-                    <div className={cx('device-infor')}>
-                        <h1>Bảng danh sách thiết bị </h1>
-                        <div className={cx('table')}>
-                            <div className={cx('ag-theme-alpine')} style={{ width: 1610, height: 650, color: 'red' }}>
-                                <AgGridReact
-                                    ref={gridRef}
-                                    rowData={rowData}
-                                    columnDefs={columnDefs}
-                                    defaultColDef={defaultColDef}
-                                    animateRows={true}
-                                    onCellClicked={cellClickedListener}
-                                    onRowClicked={rowClickedListener}
-                                    onCellContextMenu={cellContextMenuListener}
-                                />
-                            </div>
+                    <div className={cx('form-search')}>
+                        <input
+                            className={cx('form-box')}
+                            placeholder="Tìm kiếm"
+                            {...register('input', {
+                                required: 'Vui lòng nhập thông tin tìm kiếm',
+                            })}
+                        ></input>
+                        <p className={cx('error')}>{errors.input?.message}</p>
+                    </div>
+                    <Button primary type="submit" className={cx('search-btn')}>
+                        <FontAwesomeIcon icon={faMagnifyingGlass} />
+                    </Button>
+                </form>
+                <div className={cx('device-infor')}>
+                    <h1>Bảng danh sách thiết bị </h1>
+                    <div className={cx('table-2')}>
+                        <div className={cx('ag-theme-alpine')} style={{ width: 1610, height: 550, color: 'red' }}>
+                            <AgGridReact
+                                ref={gridRef}
+                                rowData={rowData}
+                                columnDefs={columnDefs}
+                                defaultColDef={defaultColDef}
+                                animateRows={true}
+                                onCellClicked={cellClickedListener}
+                                onRowClicked={rowClickedListener}
+                                onCellContextMenu={cellContextMenuListener}
+                            />
                         </div>
                     </div>
                 </div>
             </div>
+
             <div className={cx('device-infor-detail', { show: showDetail })}>
                 <Button
                     className={cx('button-cancel')}
@@ -262,6 +336,6 @@ const Service = () => {
             </div>
         </div>
     );
-};
+}
 
-export default Service;
+export default SearchDevice;

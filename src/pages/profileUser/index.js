@@ -10,6 +10,15 @@ const cx = classNames.bind(styles);
 
 function ProfileUser() {
     const username = localStorage.getItem('username');
+    const name = localStorage.getItem('fullname');
+    const role = localStorage.getItem('role');
+    const email = localStorage.getItem('email');
+    const birthDate = localStorage.getItem('birthDate');
+    const phone = localStorage.getItem('phone');
+    const joinDate = localStorage.getItem('joinDate');
+    const tenVien = localStorage.getItem('tenVien');
+    const tenPhong = localStorage.getItem('tenPhong');
+    const tenBan = localStorage.getItem('tenBan');
     const [isOpenMiniPage, setIsOpenMiniPage] = useState(false);
     const [userInfor, setUserInfor] = useState([]);
     const navigate = useNavigate();
@@ -17,6 +26,7 @@ function ProfileUser() {
         register,
         handleSubmit,
         formState: { errors },
+
         reset,
     } = useForm();
     useEffect(() => {
@@ -93,6 +103,7 @@ function ProfileUser() {
             alert('Mật khẩu mới không trùng khớp');
         }
     };
+    console.log(userInfor);
     return (
         <div>
             <div className={cx('back-ground-img')}></div>
@@ -100,16 +111,16 @@ function ProfileUser() {
                 <div className={cx('wrapper')}>
                     <h1>Thông tin người dùng</h1>
                     <div className={cx('user-infor')}>
-                        <p>Tên tài khoản : {userInfor.username}</p>
-                        <p>Tên người dùng : {userInfor.fullname}</p>
-                        <p>Vai trò : {userInfor.roles}</p>
-                        <p>Email : {userInfor.email}</p>
-                        <p>Ngày sinh : {userInfor.birthDate}</p>
-                        <p>Số điện thoại : {userInfor.phone}</p>
-                        <p>Ngày tạo tài khoản : {userInfor.joinDate}</p>
-                        <p>Tên viện : {userInfor.tenVien}</p>
-                        <p>Tên phòng : {userInfor.tenPhong}</p>
-                        <p>Tên ban : {userInfor.tenBan}</p>
+                        <p>Tên tài khoản : {username}</p>
+                        <p>Tên người dùng : {name}</p>
+                        <p>Vai trò : {role}</p>
+                        <p>Email : {email}</p>
+                        <p>Ngày sinh : {birthDate}</p>
+                        <p>Số điện thoại : {phone}</p>
+                        <p>Ngày tạo tài khoản : {joinDate}</p>
+                        <p>Tên viện : {tenVien}</p>
+                        <p>Tên phòng : {tenPhong}</p>
+                        <p>Tên ban : {tenBan}</p>
                         <Button className={cx('button-left')} primary onClick={handleChangePassword}>
                             Đổi mật khẩu
                         </Button>

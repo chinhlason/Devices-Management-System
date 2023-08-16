@@ -35,13 +35,13 @@
 }
 
 .search {
+    display: none;
     position: relative;
     width: 500px;
     height: 46px;
     padding-left: 16px;
     background-color: rgba(22, 24, 35, 0.155);
     border-radius: 92px;
-    display: flex;
     input {
         flex: 1;
         height: 100%;

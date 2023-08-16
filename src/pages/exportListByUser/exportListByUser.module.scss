@@ -5,7 +5,7 @@
 
 .wrapper {
     background-color: white;
-    width: 1850px;
+    width: 1500px;
     height: 800px;
     margin-left: auto;
     margin-right: auto;
@@ -13,30 +13,29 @@
     justify-content: center;
     border-radius: 10px;
     margin-top: 90px;
+    position: relative;
 }
 .table {
     margin-left: 10px;
 }
 .wrapper h1 {
-    margin: 20px;
-    margin-bottom: 40px;
+    margin: 40px;
 }
 
 .wrapper-2 {
     position: relative;
     background-color: white;
-    width: 1870px;
+    width: 1550px;
     height: 800px;
     margin-left: auto;
     margin-right: auto;
     display: flex;
     justify-content: center;
     border-radius: 10px;
-    margin-top: 90px;
+    margin-top: 70px;
 }
 .table-2 {
     margin-left: 10px;
-    margin-right: 20px;
 }
 .wrapper-2 h2 {
     margin-top: 50px;
@@ -52,18 +51,17 @@
 
 .infor-coupon {
     margin-right: 40px;
-    border: 1px solid black;
-    height: 600px;
-    margin-top: 100px;
-    border-radius: 10px;
     margin-left: 20px;
-    width: 350px;
+    margin-top: 100px;
+    border: 1px solid black;
+    height: 500px;
+    border-radius: 10px;
+    padding: 20px;
 }
 
 .infor-coupon p {
     margin: 10px;
     font-size: 20px;
-    word-wrap: break-word;
 }
 
 .device-infor-detail {
@@ -81,7 +79,8 @@
     transition: opacity 0.5s, transform 0.3s;
 }
 
-.device-infor-detail.show {
+.device-infor-detail.show,
+.search-box.show {
     opacity: 1;
     top: 50%;
     transform: translate(-50%, -50%) scale(1);
@@ -145,29 +144,22 @@
 
 .search-btn {
     position: absolute;
-    left: 30px;
+    left: 0;
     top: -50px;
 }
+
 .search-box {
     position: fixed;
     top: -100%;
     left: 55%;
     transform: translate(-50%, -50%);
-    width: 1850px;
+    width: 1550px;
     height: 800px;
     background-color: white;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
     z-index: 9999;
     opacity: 0;
     transition: opacity 0.5s, transform 0.3s;
-}
-
-.device-infor-detail.show,
-.search-box.show {
-    opacity: 1;
-    top: 50%;
-    transform: translate(-50%, -50%) scale(1);
-    border-radius: 10px;
 }
 
 .search-box.show {
@@ -182,25 +174,19 @@
 
 .infor-coupon-searched {
     position: absolute;
-    top: 140px;
+    top: 130px;
     left: 25px;
     border: 1px solid black;
-    height: 600px;
+    height: 500px;
     border-radius: 10px;
-    padding: 10px;
+    padding: 20px;
     font-size: 20px;
-    width: 22%;
-}
-
-.infor-coupon-searched p {
-    margin: 10px;
-    font-size: 20px;
-    word-wrap: break-word;
+    width: 30%;
 }
 
 .table-2-searched {
     position: absolute;
-    top: 40px;
+    top: 70px;
     right: 15px;
 }
 
@@ -253,4 +239,18 @@ input:not(:placeholder-shown) ~ .search-btn {
     &:active {
         background-color: rgba(22, 24, 35, 0.06);
     }
+}
+
+.clear {
+    display: none;
+    right: 65px;
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    color: rgba(77, 1, 1, 0.995);
+    background-color: transparent;
+}
+
+.clear.show {
+    display: block;
 }

@@ -4,6 +4,12 @@ import * as emailValator from 'email-validator';
 import React, { useState, useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
+import { createBrowserHistory } from 'history';
+
+import styles from './handOver.module.scss';
+import classNames from 'classnames/bind';
+import Button from '~/components/Button';
+const cx = classNames.bind(styles);
 
 const WARRANTY_URL = '/warrantycard/list';
 const USER_URL = '/user/list';
@@ -11,6 +17,8 @@ const USER_URL = '/user/list';
 function HandOver() {
     const navigate = useNavigate();
     const location = useLocation();
+    const history = createBrowserHistory();
+
     const queryParams = new URLSearchParams(location.search);
     const serial = queryParams.get('serial');
     const username = localStorage.getItem('username');
@@ -74,28 +82,44 @@ function HandOver() {
     }, [showData]);
     console.log('ssds', showDataUser);
     return (
-        <div>
-            <h1>BÀN GIAO THIẾT BỊ</h1>
+        <div className={cx('wrapper')}>
+            <div className={cx('back-ground-img')}></div>
+
             {showData.length > 0 ? (
                 <>
-                    <h2>Thông tin trạng thái thiết bị</h2>
-                    <p>Tên thiết bị: {showData[0].device.name}</p>
-                    <p>Serial: {showData[0].device.serial}</p>
-                    <p>Giá tiền: {showData[0].device.price}</p>
-                    <p>Thời gian bảo hành: {showData[0].device.warrantyTime}</p>
-                    <p>Chu kỳ bảo trì: {showData[0].device.maintenanceTime}</p>
-                    <p>Trạng thái xuất: {showData[0].device.status}</p>
-                    <p>Trạng thái bảo hành: {showData[0].device.warrantyStatus}</p>
-                    <p>Trạng thái bảo trì: {showData[0].device.maintenanceStatus}</p>
-                    <h2>Thông tin người bàn giao</h2>
-                    <p>
-                        Người nhận: {showData[0].receiver}, thuộc Phòng : {showDataUser.tenPhong}, Ban :{' '}
-                        {showDataUser.tenBan}, Viện : {showDataUser.tenVien}
-                    </p>
+                    <Button
+                        primary
+                        className={cx('cancel-btn')}
+                        onClick={() => {
+                            history.back();
+                        }}
+                    >
+                        X
+                    </Button>
+                    <h1>BÀN GIAO THIẾT BỊ</h1>
+                    <div className={cx('device-block')}>
+                        <h2>Thông tin trạng thái thiết bị</h2>
+                        <p>Tên thiết bị: {showData[0].device.name}</p>
+                        <p>Serial: {showData[0].device.serial}</p>
+                        <p>Giá tiền: {showData[0].device.price}</p>
+                        <p>Thời gian bảo hành: {showData[0].device.warrantyTime}</p>
+                        <p>Chu kỳ bảo trì: {showData[0].device.maintenanceTime}</p>
+                        <p>Trạng thái xuất: {showData[0].device.status}</p>
+                        <p>Trạng thái bảo hành: {showData[0].device.warrantyStatus}</p>
+                        <p>Trạng thái bảo trì: {showData[0].device.maintenanceStatus}</p>
+                    </div>
+                    <div className={cx('coupon-block')}>
+                        <h2>Thông tin người bàn giao</h2>
+                        <p>
+                            Người nhận: {showData[0].receiver}, thuộc Phòng : {showDataUser.tenPhong}, Ban :{' '}
+                            {showDataUser.tenBan}, Viện : {showDataUser.tenVien}
+                        </p>
+                        <p>Người xác nhận : {showData[0].confirmer}</p>
+                    </div>
 
-                    <p>Người xác nhận : {showData[0].confirmer}</p>
-
-                    <button onClick={handleHandOver}>Bàn giao</button>
+                    <Button primary onClick={handleHandOver} className={cx('submit-btn')}>
+                        Bàn giao
+                    </Button>
                 </>
             ) : (
                 <p>No data available.</p>

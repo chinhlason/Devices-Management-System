@@ -1,26 +1,23 @@
 .user-infor {
     position: fixed;
-    top: 50%;
-    left: 50%;
+    top: -500%;
+    left: 55%;
     transform: translate(-50%, -50%);
     width: 600px;
     height: 700px;
     background-color: white;
     padding: 20px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
-    z-index: 9999;
     opacity: 0;
     transition: opacity 0.5s, transform 0.3s;
 }
 
 .user-infor.show {
+    top: 50%;
     opacity: 1;
     transform: translate(-50%, -50%) scale(1);
     border-radius: 10px;
-}
-
-.button-cancel {
-    margin-left: 80%;
+    z-index: 22;
 }
 
 .user-infor.show p {
@@ -30,6 +27,9 @@
     font-size: 20px;
 }
 
+.button-cancel {
+    margin-left: 80%;
+}
 .mainpage {
     height: 100%;
     position: relative;
@@ -55,7 +55,7 @@
     margin-bottom: 90px;
 }
 
-.table.hide {
+.table .hide {
     margin-left: 10px;
     margin-right: 10px;
     margin-bottom: 90px;
@@ -86,4 +86,60 @@
     margin: 40px;
     font-size: 25px;
     margin-bottom: 30px;
+}
+
+.overlay-2 {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.509);
+    z-index: 1;
+    display: none;
+}
+
+.overlay-2.show {
+    display: block;
+}
+.confirm-box {
+    position: fixed;
+    top: -500%;
+    left: 55%;
+    transform: translate(-50%, -50%);
+    width: 600px;
+    height: 200px;
+    background-color: white;
+    padding: 20px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+    opacity: 0;
+    transition: opacity 0.5s, transform 0.3s;
+    font-size: 25px;
+}
+
+.confirm-box.show {
+    top: 35%;
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1);
+    border-radius: 10px;
+    z-index: 22;
+}
+
+.confirm-box.show p {
+    color: black;
+    margin: 10px;
+    margin-left: 20px;
+    font-size: 20px;
+}
+
+.cancel-btn {
+    position: absolute;
+    left: 20px;
+    bottom: 20px;
+}
+
+.confirm-btn {
+    position: absolute;
+    right: 20px;
+    bottom: 20px;
 }

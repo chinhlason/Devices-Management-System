@@ -14,13 +14,14 @@ import CategoryDevice from '~/pages/categoryDevice';
 import ImportCoupon from '~/pages/importCoupon';
 import ExportCoupon from '~/pages/exportCoupon';
 import WarrantyCoupon from '~/pages/warrantyCoupon';
-import MainPage from '~/pages/useMainPage';
+import MainPage from '~/pages/userMainPage';
 import ProfileUser from '~/pages/profileUser';
 import DeviceByUsers from '~/pages/deviceByUser';
 import ExportListByUser from '~/pages/exportListByUser';
 import NotiPage from '~/pages/notiPage';
 import HandOver from '~/pages/handOver';
 import ResetPassword from '~/pages/resetPassword';
+import SearchDevice from '~/pages/searchDevice';
 const publicRoutes = [
     { path: '/', component: Login, layout: null },
     { path: '/service', component: Service },
@@ -42,6 +43,7 @@ const publicRoutes = [
     { path: '/exportlistbyuser', component: ExportListByUser },
     { path: '/notification', component: NotiPage },
     { path: '/handover', component: HandOver },
+    { path: '/search', component: SearchDevice },
     { path: '/resetpassword', component: ResetPassword, layout: null },
 ];
 

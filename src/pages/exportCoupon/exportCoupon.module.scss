@@ -1,3 +1,8 @@
+.content-all {
+    position: relative;
+    height: 100%;
+}
+
 .wrapper {
     background-color: white;
     width: 1500px;
@@ -7,14 +12,14 @@
     display: flex;
     justify-content: center;
     border-radius: 10px;
-    margin-top: 70px;
+    margin-top: 90px;
 }
 .table {
     margin-left: 10px;
 }
 .wrapper h1 {
-    margin: 20px;
-    margin-bottom: 40px;
+    margin: 40px;
+    margin-bottom: 20px;
 }
 
 .wrapper-2 {
@@ -51,9 +56,186 @@
     margin-top: 100px;
     border-radius: 10px;
     margin-left: 20px;
+    padding: 20px;
 }
 
 .infor-coupon p {
     margin: 10px;
     font-size: 20px;
+}
+
+.device-infor-detail {
+    position: fixed;
+    top: -100%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 600px;
+    height: 700px;
+    background-color: white;
+    padding: 20px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+    z-index: 9999;
+    opacity: 0;
+    transition: opacity 0.5s, transform 0.3s;
+}
+
+.button-cancel {
+    margin-left: 80%;
+}
+
+.device-infor-detail.show p {
+    color: black;
+    margin: 10px;
+    margin-left: 20px;
+    font-size: 20px;
+}
+
+.table-2 .hide {
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 70px;
+    margin-bottom: 90px;
+    opacity: 0.8;
+    z-index: -1;
+}
+
+.wrapper-all {
+    position: relative;
+    height: 100%;
+    width: 100%;
+    top: 0px;
+}
+
+.overlay {
+    position: absolute;
+    top: -70px;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.509);
+    z-index: 1;
+    display: none;
+}
+.overlay.show {
+    display: block;
+}
+
+.overlay-2 {
+    position: absolute;
+    top: -90px;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.509);
+    z-index: 1;
+    display: none;
+}
+.overlay-2.show {
+    display: block;
+}
+
+.search-btn {
+    position: absolute;
+    left: 200px;
+    top: -50px;
+}
+.search-box {
+    position: fixed;
+    top: -100%;
+    left: 55%;
+    transform: translate(-50%, -50%);
+    width: 1550px;
+    height: 800px;
+    background-color: white;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+    z-index: 9999;
+    opacity: 0;
+    transition: opacity 0.5s, transform 0.3s;
+}
+
+.device-infor-detail.show,
+.search-box.show {
+    opacity: 1;
+    top: 50%;
+    transform: translate(-50%, -50%) scale(1);
+    border-radius: 10px;
+}
+
+.search-box.show {
+    display: block;
+}
+
+.button-cancel-search {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+}
+
+.infor-coupon-searched {
+    position: absolute;
+    top: 140px;
+    left: 25px;
+    border: 1px solid black;
+    height: 500px;
+    border-radius: 10px;
+    padding: 20px;
+    font-size: 20px;
+    width: 30%;
+}
+
+.table-2-searched {
+    position: absolute;
+    top: 40px;
+    right: 15px;
+}
+
+.search-input-box {
+    width: 500px;
+    height: 46px;
+    padding-left: 16px;
+    background-color: rgba(22, 24, 35, 0.155);
+    border-radius: 92px;
+    margin-left: 20px;
+    margin-top: 10px;
+    display: flex;
+    input {
+        flex: 1;
+        height: 100%;
+        color: black;
+        font-size: 20px;
+        border: none;
+        outline: none;
+        background-color: transparent;
+    }
+
+    &:focus-within {
+        border: 2px solid rgba(22, 24, 35, 0.06);
+    }
+}
+
+input:not(:placeholder-shown) ~ .search-btn {
+    color: black;
+}
+
+.search-btn-small {
+    width: 52px;
+    height: 100%;
+    border: none;
+    outline: none;
+    margin-left: 175px;
+    border-top-right-radius: var(--search-border-radius);
+    border-bottom-right-radius: var(--search-border-radius);
+    background-color: transparent;
+    color: rgba(77, 1, 1, 0.995);
+    font-size: 20px;
+    // border-left: 1px solid rgba(183, 2, 2, 0.995);
+
+    &:hover {
+        cursor: pointer;
+        background-color: rgba(22, 24, 35, 0.155);
+        border-radius: 0 92px 92px 0;
+    }
+    &:active {
+        background-color: rgba(22, 24, 35, 0.06);
+    }
 }

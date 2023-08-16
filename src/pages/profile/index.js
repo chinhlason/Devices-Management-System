@@ -14,15 +14,18 @@ const USER_URL = '/user/list';
 
 function Profile() {
     const navigate = useNavigate();
+    const [showConfirm, setShowConfirm] = useState(false);
     const handleChange = (id) => {
         navigate(`/update?id=${id}`);
     };
     const handleDisable = (id) => {
-        console.log('Disable user with ID:', id);
+        setShowConfirm(true);
+        setInforDisable(id);
     };
     const gridRef = useRef();
     const [rowData, setRowData] = useState([]);
     const [showDetail, setShowDetail] = useState([]);
+    const [inforDisable, setInforDisable] = useState('');
     const [showInfor, setShowInfor] = useState(false);
 
     const defaultColDef = useMemo(
@@ -36,7 +39,7 @@ function Profile() {
             { field: 'username', headerName: 'Username', filter: true, width: 140 },
             { field: 'fullname', headerName: 'Tên người dùng', filter: true, width: 200 },
             { field: 'roles', headerName: 'Quyền hạn', filter: true, width: 140 },
-            { field: 'email', headerName: 'Email', width: 220 },
+            { field: 'email', headerName: 'Email', filter: true, width: 220 },
             { field: 'phone', headerName: 'Số điện thoại', filter: true, width: 140 },
             { field: 'birthDate', headerName: 'Ngày sinh', filter: true, width: 140 },
             { field: 'joinDate', headerName: 'Ngày tạo', filter: true },
@@ -158,13 +161,19 @@ function Profile() {
     };
 
     console.log(showDetail);
+    console.log('kk', inforDisable);
     return (
         <div className={cx('mainpage', { hide: showInfor })}>
             <div className={cx('back-ground-img')}></div>
 
+            <div
+                className={cx('overlay', { show: showInfor })}
+                onClick={() => {
+                    setShowInfor(false);
+                }}
+            ></div>
             <div className={cx('wrapper')}>
-                <div className={cx('table', { hide: showInfor, show: showInfor })}>
-                    <div className={cx('overlay', { show: showInfor })}></div>
+                <div className={cx('table')}>
                     <h1>Bảng danh sách người dùng</h1>
                     <div className="ag-theme-alpine" style={{ width: 1670, height: 500 }}>
                         <Button className={cx('button')} primary onClick={handleSignup}>
@@ -182,29 +191,65 @@ function Profile() {
                         />
                     </div>
                 </div>
+            </div>
 
-                <div className={cx('user-infor', { show: showInfor })}>
-                    <Button
-                        className={cx('button-cancel')}
-                        primary
-                        onClick={() => {
-                            setShowInfor(false);
-                        }}
-                    >
-                        X
-                    </Button>
-                    <h2>Thông tin người dùng {showDetail.username}</h2>
-                    <p>Tên tài khoản : {showDetail.username}</p>
-                    <p>Tên người dùng : {showDetail.fullname}</p>
-                    <p>Vai trò : {showDetail.roles}</p>
-                    <p>Email : {showDetail.email}</p>
-                    <p>Ngày sinh : {showDetail.birthDate}</p>
-                    <p>Số điện thoại : {showDetail.phone}</p>
-                    <p>Ngày tạo tài khoản : {showDetail.joinDate}</p>
-                    <p>Tên viện : {showDetail.tenVien}</p>
-                    <p>Tên phòng : {showDetail.tenPhong}</p>
-                    <p>Tên ban : {showDetail.tenBan}</p>
-                </div>
+            <div className={cx('user-infor', { show: showInfor })}>
+                <Button
+                    className={cx('button-cancel')}
+                    primary
+                    onClick={() => {
+                        setShowInfor(false);
+                    }}
+                >
+                    X
+                </Button>
+                <h2>Thông tin người dùng {showDetail.username}</h2>
+                <p>Tên tài khoản : {showDetail.username}</p>
+                <p>Tên người dùng : {showDetail.fullname}</p>
+                <p>Vai trò : {showDetail.roles}</p>
+                <p>Email : {showDetail.email}</p>
+                <p>Ngày sinh : {showDetail.birthDate}</p>
+                <p>Số điện thoại : {showDetail.phone}</p>
+                <p>Ngày tạo tài khoản : {showDetail.joinDate}</p>
+                <p>Tên viện : {showDetail.tenVien}</p>
+                <p>Tên phòng : {showDetail.tenPhong}</p>
+                <p>Tên ban : {showDetail.tenBan}</p>
+            </div>
+
+            <div
+                className={cx('overlay-2', { show: showConfirm })}
+                onClick={() => {
+                    setShowConfirm(false);
+                }}
+            ></div>
+            <div className={cx('confirm-box', { show: showConfirm })}>
+                Xác nhận vô hiệu hoá tài khoản {inforDisable} ?
+                <Button
+                    primary
+                    className={cx('confirm-btn')}
+                    onClick={() => {
+                        httpRequest
+                            .get(`/user/disable?username=${inforDisable}`, { withCredentials: true })
+                            .then((response) => {
+                                setShowConfirm(false);
+                                alert('thành công');
+                            })
+                            .catch((err) => {
+                                console.log(err);
+                            });
+                    }}
+                >
+                    Xác nhận
+                </Button>
+                <Button
+                    primary
+                    className={cx('cancel-btn')}
+                    onClick={() => {
+                        setShowConfirm(false);
+                    }}
+                >
+                    Huỷ
+                </Button>
             </div>
         </div>
     );

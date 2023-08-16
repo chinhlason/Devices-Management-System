@@ -1,0 +1,48 @@
+.wrapper {
+    position: relative;
+    display: flex;
+    height: 700px;
+    width: 1200px;
+    background-color: white;
+    padding: 50px;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+    margin-left: 20%;
+    margin-top: 5%;
+}
+
+.wrapper h1 {
+    position: absolute;
+    top: 0px;
+}
+.submit-btn {
+    position: absolute;
+    bottom: 50px;
+    right: 30px;
+}
+
+.coupon-block {
+    width: 40%;
+    margin-right: 5%;
+    border-radius: 10px;
+    border: solid 1px black;
+    padding: 10px;
+}
+.device-block p,
+.coupon-block p {
+    word-wrap: break-word;
+    font-size: 20px;
+}
+.device-block {
+    width: 45%;
+    margin-right: 5%;
+    border-radius: 10px;
+    border: solid 1px black;
+    padding: 10px;
+}
+
+.cancel-btn {
+    position: absolute;
+    right: 30px;
+    top: 15px;
+}

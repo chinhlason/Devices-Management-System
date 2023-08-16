@@ -5,25 +5,23 @@ import 'ag-grid-community/styles/ag-grid.css'; // Core grid CSS, always needed
 import 'ag-grid-community/styles/ag-theme-alpine.css'; // Optional theme CSS
 import { useNavigate } from 'react-router-dom';
 
-import styles from './service.module.scss';
+import styles from './userMainPage.module.scss';
 import classNames from 'classnames/bind';
 import Button from '~/components/Button';
 const cx = classNames.bind(styles);
 
 const DEVICE_URL = '/device/list';
-
-const Service = () => {
+function MainPage() {
     const gridRef = useRef(); // Optional - for accessing Grid's API
     const [rowData, setRowData] = useState([]); // Set rowData to Array of Objects, one Object per Row
     const [showDetail, setShowDetail] = useState(false);
     const [showInfor, setShowInfor] = useState([]);
     const navigate = useNavigate();
-
     const columnDefs = useMemo(
         () => [
             { field: 'name', headerName: 'TÊN THIẾT BỊ', filter: true },
             { field: 'serial', headerName: 'SERIAL', filter: true },
-            { field: 'price', headerName: 'Giá tiền', filter: true },
+            { field: 'price', headerName: 'Giá tiền' },
             { field: 'warrantyTime', headerName: 'Thời hạn bảo hành', filter: true },
             { field: 'maintenanceTime', headerName: 'Chu kì bảo trì', filter: true },
             { field: 'status', headerName: 'Trạng thái xuất', filter: true },
@@ -32,8 +30,6 @@ const Service = () => {
         ],
         [],
     );
-
-    // DefaultColDef sets props common to all Columns
     const defaultColDef = useMemo(
         () => ({
             sortable: true,
@@ -49,7 +45,7 @@ const Service = () => {
     }, []);
     useEffect(() => {
         httpRequest
-            .get(DEVICE_URL, { withCredentials: true })
+            .get(`/device?data=TRONG_KHO&type=status`, { withCredentials: true })
             .then((response) => {
                 const data = response.data; // Assuming the response is an array of objects
                 setRowData(data);
@@ -69,22 +65,6 @@ const Service = () => {
                 name: 'Chi tiết thiết bị',
                 action: () => handleDetail(dataResponse),
             },
-            update: {
-                name: 'Cập nhật thông tin',
-                action: () => handleUpdate(dataResponse),
-            },
-            export: {
-                name: 'Tạo phiếu xuất',
-                action: () => handleExport(dataResponse),
-            },
-            warrantyState: {
-                name: 'Chỉnh sửa trạng thái bảo hành',
-                action: () => handleWarrantyState(dataResponse),
-            },
-            maintainanceState: {
-                name: 'Chỉnh sửa trạng thái bảo trì',
-                action: () => handleMaintainanceState(dataResponse),
-            },
         };
         if (dataResponse.status === 'DA_XUAT') {
             delete options.export;
@@ -97,7 +77,6 @@ const Service = () => {
         }
         showContextMenu(params.event.clientX, params.event.clientY, options);
     }, []);
-
     const showContextMenu = (clientX, clientY, options) => {
         const contextMenuDiv = document.createElement('div');
         contextMenuDiv.id = 'customContextMenu';
@@ -145,34 +124,9 @@ const Service = () => {
             document.removeEventListener('contextmenu', handleContextMenu);
         };
     }, []);
-
-    const handleUpdate = (data) => {
-        navigate(`/updatedevice?serial=${data.serial}`);
-    };
-
-    const handleExport = (data) => {
-        navigate(`/exportdevice?serial=${data.serial}`);
-    };
-
-    const handleWarrantyState = (data) => {
-        navigate(`/handover?serial=${data.serial}`);
-    };
-
-    const handleMaintainanceState = (data) => {
-        console.log(1);
-    };
-
-    const handleAdd = (data) => {
-        navigate('/adddevice?role=ROLE_ADMIN');
-    };
-
-    const handleExportList = () => {
-        navigate('/exportlistdevice?role=ROLE_ADMIN');
-    };
-
     const handleDetail = (serial) => {
         httpRequest
-            .get(DEVICE_URL, { withCredentials: true })
+            .get('device?data=TRONG_KHO&type=status', { withCredentials: true })
             .then((response) => {
                 const data = response.data; // Assuming the response is an array of objects
                 const result = data.find((element) => {
@@ -186,27 +140,21 @@ const Service = () => {
             });
         setShowDetail(true);
     };
-    console.log('check', showInfor);
-    localStorage.setItem('previousPage', 'service');
+    localStorage.setItem('previousPage', 'mainpage');
+
     return (
-        <div className={cx('wrapper')}>
-            <div className={cx('back-ground-img')}></div>
-            <div className={cx('table', { hide: showDetail })}>
-                <div
-                    className={cx('overlay', { show: showDetail })}
-                    onClick={() => {
-                        setShowDetail(false);
-                    }}
-                ></div>
-                <div className={cx('wrapper-1')}>
-                    <div className={cx('buttons')}>
-                        <Button rounded onClick={handleAdd}>
-                            Nhập thiết bị
-                        </Button>
-                        <Button rounded onClick={handleExportList}>
-                            Xuất thiết bị
-                        </Button>
+        <div className={cx('grid', 'wrapper')}>
+            <div
+                className={cx('overlay', { show: showDetail })}
+                onClick={() => {
+                    setShowDetail(false);
+                }}
+            ></div>
+            <div className={cx('row', 'no-gutters')}>
+                <div className={cx('col', 'l-11')}>
+                    <div className={cx('content-main')}>
                         <Button
+                            className={cx('search-btn')}
                             rounded
                             onClick={() => {
                                 navigate('/search');
@@ -214,11 +162,11 @@ const Service = () => {
                         >
                             Tìm kiếm{' '}
                         </Button>
-                    </div>
-                    <div className={cx('device-infor')}>
-                        <h1>Bảng danh sách thiết bị </h1>
-                        <div className={cx('table')}>
-                            <div className={cx('ag-theme-alpine')} style={{ width: 1610, height: 650, color: 'red' }}>
+                        <div className={cx('back-ground-img')}></div>
+
+                        <div className={cx('table-2')}>
+                            <div className="ag-theme-alpine" style={{ width: 1610, height: 500 }}>
+                                <h1>THÔNG TIN CÁC THIẾT BỊ TRONG KHO</h1>
                                 <AgGridReact
                                     ref={gridRef}
                                     rowData={rowData}
@@ -231,37 +179,38 @@ const Service = () => {
                                 />
                             </div>
                         </div>
+
+                        <div className={cx('device-infor-detail', { show: showDetail })}>
+                            <Button
+                                className={cx('button-cancel')}
+                                primary
+                                onClick={() => {
+                                    setShowDetail(false);
+                                }}
+                            >
+                                X
+                            </Button>
+                            <h2>Thông tin thiết bị {showInfor.serial}</h2>
+                            <p>Tên thiết bị : {showInfor.name}</p>
+                            <p>Serial : {showInfor.serial}</p>
+                            {showInfor && showInfor.category && showInfor.category.name && (
+                                <p>Danh mục sản phẩm : {showInfor.category.name}</p>
+                            )}
+                            {showInfor && showInfor.category && showInfor.category.description && (
+                                <p>Chi tiết sản phẩm : {showInfor.category.description}</p>
+                            )}
+                            <p>Giá tiền : {showInfor.price}</p>
+                            <p>Trạng thái xuất : {showInfor.status}</p>
+                            <p>Thời gian bảo hành : {showInfor.warrantyTime}</p>
+                            <p>Trạng thái bảo hành : {showInfor.warrantyStatus}</p>
+                            <p>Chu kỳ bảo trì : {showInfor.maintenanceTime}</p>
+                            <p>Trạng thái bảo trì : {showInfor.maintenanceStatus}</p>
+                        </div>
                     </div>
                 </div>
             </div>
-            <div className={cx('device-infor-detail', { show: showDetail })}>
-                <Button
-                    className={cx('button-cancel')}
-                    primary
-                    onClick={() => {
-                        setShowDetail(false);
-                    }}
-                >
-                    X
-                </Button>
-                <h2>Thông tin thiết bị {showInfor.serial}</h2>
-                <p>Tên thiết bị : {showInfor.name}</p>
-                <p>Serial : {showInfor.serial}</p>
-                {showInfor && showInfor.category && showInfor.category.name && (
-                    <p>Danh mục sản phẩm : {showInfor.category.name}</p>
-                )}
-                {showInfor && showInfor.category && showInfor.category.description && (
-                    <p>Chi tiết sản phẩm : {showInfor.category.description}</p>
-                )}
-                <p>Giá tiền : {showInfor.price}</p>
-                <p>Trạng thái xuất : {showInfor.status}</p>
-                <p>Thời gian bảo hành : {showInfor.warrantyTime}</p>
-                <p>Trạng thái bảo hành : {showInfor.warrantyStatus}</p>
-                <p>Chu kỳ bảo trì : {showInfor.maintenanceTime}</p>
-                <p>Trạng thái bảo trì : {showInfor.maintenanceStatus}</p>
-            </div>
         </div>
     );
-};
+}
 
-export default Service;
+export default MainPage;

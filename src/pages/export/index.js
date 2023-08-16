@@ -3,6 +3,12 @@ import httpRequest from '~/utils/htppRequest';
 import { useForm } from 'react-hook-form';
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { createBrowserHistory } from 'history';
+import styles from './export.module.scss';
+import classNames from 'classnames/bind';
+import Button from '~/components/Button';
+const cx = classNames.bind(styles);
+
 const EXPORT_URL = '/phieuxuat/add';
 const DEVICE_URL = '/device/list';
 const USER_URL = '/user/list';
@@ -10,6 +16,7 @@ function Export() {
     const navigate = useNavigate();
     const location = useLocation();
     const queryParams = new URLSearchParams(location.search);
+    const history = createBrowserHistory();
     const serial = queryParams.get('serial');
     const {
         register,
@@ -93,39 +100,71 @@ function Export() {
             });
     };
     return (
-        <div>
-            <h1>TẠO PHIẾU XUẤT</h1>
-            <p>Tên thiết bị : {deviceInfor.name}</p>
-            <p>Số Serial : {deviceInfor.serial}</p>
-            <p>Giá : {deviceInfor.price}</p>
-            <p>Thời hạn bảo hành : {deviceInfor.warrantyStatus}</p>
-            <p>Chu kì bảo trì : {deviceInfor.warrantyTime}</p>
-            <form onSubmit={handleSubmit(onSubmit)}>
-                <input
-                    placeholder="Tên tài khoản người nhận"
-                    {...register('username', {
-                        required: 'Vui lòng nhập tên tài khoản',
-                        minLength: {
-                            value: 6,
-                            message: 'Tối thiểu 6 kí tự',
-                        },
-                    })}
-                />
-                <p>{errors.username?.message}</p>
-                <button type="submit">Kiểm tra người nhận</button>
-                {isExist ? (
-                    <div>
-                        <p>Username: {userInfor.username}</p>
-                        <p>Tên người nhận: {userInfor.fullname}</p>
-                        <p>
-                            Phòng, Ban, Viện: {userInfor.tenPhong}, {userInfor.tenVien}, {userInfor.tenBan}
-                        </p>
-                        <button onClick={handleExport}>Tạo phiếu xuất</button>
+        <div className={cx('grid', 'wrapper')}>
+            <div className={cx('row', 'no-gutters')}>
+                <div className={cx('col', 'l-5', 'l-o-1')}>
+                    <div className={cx('content-main')}>
+                        <div className={cx('back-ground-img')}></div>
+                        <h1>TẠO PHIẾU XUẤT</h1>
+                        <p>Tên thiết bị : {deviceInfor.name}</p>
+                        <p>Số Serial : {deviceInfor.serial}</p>
+                        <p>Giá : {deviceInfor.price}</p>
+                        <p>Thời hạn bảo hành : {deviceInfor.warrantyStatus}</p>
+                        <p>Chu kì bảo trì : {deviceInfor.warrantyTime}</p>
                     </div>
-                ) : (
-                    <p> Không tồn tại người dùng </p>
-                )}
-            </form>
+                </div>
+
+                <div className={cx('col', 'l-5')}>
+                    <div className={cx('content-main')}>
+                        <Button
+                            primary
+                            className={cx('button-cancel')}
+                            onClick={() => {
+                                history.back();
+                            }}
+                        >
+                            X
+                        </Button>
+                        <div className={cx('back-ground-img')}></div>
+                        <h2>Thông tin người nhận</h2>
+
+                        <form onSubmit={handleSubmit(onSubmit)}>
+                            <input
+                                className={cx('form-box')}
+                                placeholder="Tên tài khoản người nhận"
+                                {...register('username', {
+                                    required: 'Vui lòng nhập tên tài khoản',
+                                    minLength: {
+                                        value: 6,
+                                        message: 'Tối thiểu 6 kí tự',
+                                    },
+                                })}
+                            />
+                            <p>{errors.username?.message}</p>
+                            <Button primary type="submit">
+                                Kiểm tra người nhận
+                            </Button>
+                            {isExist ? (
+                                <div>
+                                    <div className={cx('receiver-infor')}>
+                                        <p>Username: {userInfor.username}</p>
+                                        <p>Tên người nhận: {userInfor.fullname}</p>
+                                        <p>
+                                            Phòng: {userInfor.tenPhong}, Viện: {userInfor.tenVien}, Ban:{' '}
+                                            {userInfor.tenBan}
+                                        </p>
+                                    </div>
+                                    <Button primary onClick={handleExport}>
+                                        Tạo phiếu xuất
+                                    </Button>
+                                </div>
+                            ) : (
+                                <p> Không tồn tại người dùng </p>
+                            )}
+                        </form>
+                    </div>
+                </div>
+            </div>
         </div>
     );
 }

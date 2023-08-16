@@ -236,31 +236,57 @@ function Sidebar() {
             ) : (
                 <section>
                     <aside className={cx('wrapper')}>
-                        <button onClick={handleGoToServicePage2}>Trang chủ</button>
-                        <SideBarItem className={cx('user-sidebar')}>
-                            Người dùng
-                            <button onClick={handleOpen1}>
-                                {isOpen1 ? <FontAwesomeIcon icon={faAngleUp} /> : 'down'}
-                            </button>
-                            {isOpen1 && (
-                                <div className={cx('user-items')}>
-                                    <SideBarOption title="Thông tin người dùng" to={'/profileuser'} />
-                                    <LogOut title="Đăng xuất" to={'/'} />
+                        <div className={cx('wrapper-mini')}>
+                            <button
+                                onClick={handleGoToServicePage2}
+                                className={cx('button-main-page', { 'bold-text': isMainPage })}
+                            >
+                                <div className={cx('icon-item')}>
+                                    <FontAwesomeIcon icon={faHouse} />
                                 </div>
-                            )}
-                        </SideBarItem>
-                        <SideBarItem className={cx('user-sidebar')}>
-                            Quản lý thiết bị trong phòng ban
-                            <button onClick={handleOpen2}>
-                                {isOpen2 ? <FontAwesomeIcon icon={faAngleUp} /> : 'down'}
+                                Trang chủ
                             </button>
-                            {isOpen2 && (
-                                <div className={cx('user-items')}>
+
+                            <SideBarItem className={cx('user-sidebar')}>
+                                <div className={cx('option-sidebar', { 'bold-text': isOpen1 })} onClick={handleOpen1}>
+                                    <div className={cx('icon-item')}>
+                                        <FontAwesomeIcon icon={faUser} />
+                                    </div>
+                                    Người dùng
+                                    <button className={cx('up-down-button')}>
+                                        {isOpen1 ? (
+                                            <FontAwesomeIcon icon={faAngleUp} />
+                                        ) : (
+                                            <FontAwesomeIcon icon={faAngleDown} />
+                                        )}
+                                    </button>
+                                </div>
+                                <div className={cx('sidebar-items-user', { open: isOpen1 })}>
+                                    <SideBarOption title="Thông tin người dùng" to={'/profileuser'} />
+                                    <LogOut title="Đăng xuất" />
+                                </div>
+                            </SideBarItem>
+
+                            <SideBarItem className={cx('department-sidebar')}>
+                                <div className={cx('option-sidebar', { 'bold-text': isOpen2 })} onClick={handleOpen2}>
+                                    <div className={cx('icon-item')}>
+                                        <FontAwesomeIcon icon={faBuildingUser} />
+                                    </div>
+                                    Quản lý thiết bị trong phòng ban
+                                    <button className={cx('up-down-button')}>
+                                        {isOpen2 ? (
+                                            <FontAwesomeIcon icon={faAngleUp} />
+                                        ) : (
+                                            <FontAwesomeIcon icon={faAngleDown} />
+                                        )}
+                                    </button>
+                                </div>
+                                <div className={cx('sidebar-items-department', { open: isOpen2 })}>
                                     <SideBarOption title="Danh sách thiết bị" to={'/devicebyusers'} />
                                     <SideBarOption title="Danh sách phiếu xuất về phòng ban" to={'/exportlistbyuser'} />
                                 </div>
-                            )}
-                        </SideBarItem>
+                            </SideBarItem>
+                        </div>
                     </aside>
                 </section>
             )}

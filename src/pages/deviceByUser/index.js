@@ -5,11 +5,21 @@ import { useForm } from 'react-hook-form';
 import 'ag-grid-community/styles/ag-grid.css'; // Core grid CSS, always needed
 import 'ag-grid-community/styles/ag-theme-alpine.css'; // Optional theme CSS
 import { useNavigate } from 'react-router-dom';
+
+import styles from './deviceByUser.module.scss';
+import classNames from 'classnames/bind';
+import Button from '~/components/Button';
+const cx = classNames.bind(styles);
+
 const DEVICE_URL = '/device/list-by-current-user';
 const REQUEST_URL = '/warrantycard/require';
 function DeviceByUsers() {
     const gridRef = useRef(); // Optional - for accessing Grid's API
     const [rowData, setRowData] = useState([]); // Set rowData to Array of Objects, one Object per Row
+    const [showDetail, setShowDetail] = useState(false);
+    const [showWarranty, setShowWarranty] = useState(false);
+    const [showInfor, setShowInfor] = useState([]);
+    const [currentTime, setCurrentTime] = useState(new Date());
     const navigate = useNavigate();
     const tenVien = localStorage.getItem('tenVien');
     const tenPhong = localStorage.getItem('tenPhong');
@@ -74,6 +84,11 @@ function DeviceByUsers() {
         const selectedRow = params.node.data;
         const dataResponse = selectedRow;
         const options = {
+            detail: {
+                name: 'Chi tiết thiết bị',
+                action: () => handleDetail(dataResponse),
+            },
+
             request: {
                 name: 'Yêu cầu bảo hành',
                 action: () => handleRequest(dataResponse),
@@ -124,6 +139,7 @@ function DeviceByUsers() {
     const handleRequest = (data) => {
         console.log(data);
         setIsOpenRequestPage(true);
+        setShowWarranty(true);
         setDataRequest(data);
     };
 
@@ -150,42 +166,130 @@ function DeviceByUsers() {
                 console.log(err);
             });
     };
+    const handleDetail = (serial) => {
+        httpRequest
+            .get(DEVICE_URL, { withCredentials: true })
+            .then((response) => {
+                const data = response.data; // Assuming the response is an array of objects
+                const result = data.find((element) => {
+                    return serial.serial === element.serial;
+                });
+                console.log('kq', result);
+                setShowInfor(result);
+            })
+            .catch((err) => {
+                console.log(err);
+            });
+        setShowDetail(true);
+    };
+    useEffect(() => {
+        const interval = setInterval(() => {
+            setCurrentTime(new Date());
+        }, 1000); // Cập nhật thời gian mỗi giây
+
+        return () => clearInterval(interval); // Xóa interval khi component unmount
+    }, []);
+    localStorage.setItem('previousPage', 'devicebyuser');
     return (
-        <div>
-            {!isOpenRequestPage ? (
-                <div className="ag-theme-alpine" style={{ width: 1500, height: 500 }}>
-                    <h1>
-                        Danh sách thiết bị thuộc phòng {tenPhong}, ban {tenBan}, viện {tenVien}
-                    </h1>
-                    <AgGridReact
-                        ref={gridRef}
-                        rowData={rowData}
-                        columnDefs={columnDefs}
-                        defaultColDef={defaultColDef}
-                        animateRows={true}
-                        onCellClicked={cellClickedListener}
-                        onRowClicked={rowClickedListener}
-                        onCellContextMenu={cellContextMenuListener}
+        <div className={cx('wrapper')}>
+            <div>
+                <div
+                    className={cx('overlay', { show: showDetail })}
+                    onClick={() => {
+                        setShowDetail(false);
+                    }}
+                ></div>
+
+                <div
+                    className={cx('overlay-2', { show: showWarranty })}
+                    onClick={() => {
+                        setShowWarranty(false);
+                    }}
+                ></div>
+                <Button
+                    className={cx('search-btn')}
+                    rounded
+                    onClick={() => {
+                        navigate('/search');
+                    }}
+                >
+                    Tìm kiếm{' '}
+                </Button>
+                <div className={cx('content-main')}>
+                    <div className={cx('back-ground-img')}></div>
+                    <div className={cx('table-2')}>
+                        <div className="ag-theme-alpine" style={{ width: 1610, height: 620 }}>
+                            <h1>
+                                Danh sách thiết bị thuộc phòng {tenPhong}, ban {tenBan}, viện {tenVien}
+                            </h1>
+                            <AgGridReact
+                                ref={gridRef}
+                                rowData={rowData}
+                                columnDefs={columnDefs}
+                                defaultColDef={defaultColDef}
+                                animateRows={true}
+                                onCellClicked={cellClickedListener}
+                                onRowClicked={rowClickedListener}
+                                onCellContextMenu={cellContextMenuListener}
+                            />
+                        </div>
+                    </div>
+                </div>
+                <div className={cx('device-infor-detail', { show: showDetail })}>
+                    <Button
+                        className={cx('button-cancel')}
+                        primary
+                        onClick={() => {
+                            setShowDetail(false);
+                        }}
+                    >
+                        X
+                    </Button>
+                    <h2>Thông tin thiết bị {showInfor.serial}</h2>
+                    <p>Tên thiết bị : {showInfor.name}</p>
+                    <p>Serial : {showInfor.serial}</p>
+                    {showInfor && showInfor.category && showInfor.category.name && (
+                        <p>Danh mục sản phẩm : {showInfor.category.name}</p>
+                    )}
+                    {showInfor && showInfor.category && showInfor.category.description && (
+                        <p>Chi tiết sản phẩm : {showInfor.category.description}</p>
+                    )}
+                    <p>Giá tiền : {showInfor.price}</p>
+                    <p>Trạng thái xuất : {showInfor.status}</p>
+                    <p>Thời gian bảo hành : {showInfor.warrantyTime}</p>
+                    <p>Trạng thái bảo hành : {showInfor.warrantyStatus}</p>
+                    <p>Chu kỳ bảo trì : {showInfor.maintenanceTime}</p>
+                    <p>Trạng thái bảo trì : {showInfor.maintenanceStatus}</p>
+                </div>
+            </div>
+
+            <div className={cx('device-infor-to-warranty', { show: showWarranty })}>
+                <h1>Yêu cầu bảo hành thiết bị {dataRequest.name}</h1>
+                <h1>Serial {dataRequest.serial}</h1>
+                <form onSubmit={handleSubmit(onSubmit)}>
+                    <input
+                        className={cx('form-box', 'form-box-large')}
+                        placeholder="Nhập yêu cầu bảo hành"
+                        {...register('note', {
+                            required: 'Vui lòng nhập yêu cầu bảo hành',
+                        })}
                     />
-                </div>
-            ) : (
-                <div>
-                    <h1>
-                        Yêu cầu bảo hành thiết bị {dataRequest.name}, serial {dataRequest.serial}
-                    </h1>
-                    <form onSubmit={handleSubmit(onSubmit)}>
-                        <input
-                            placeholder="Nhập yêu cầu bảo hành"
-                            {...register('note', {
-                                required: 'Vui lòng nhập yêu cầu bảo hành',
-                            })}
-                        />
-                        <p>{errors.note?.message}</p>
-                        <input type="submit" />
-                    </form>
-                    <button onClick={handleCancel}>Huỷ</button>
-                </div>
-            )}
+                    <p>{errors.note?.message}</p>
+                    <p>{currentTime.toLocaleString()}</p>
+                    <Button primary type="submit" className={cx('button-submit')}>
+                        Gửi
+                    </Button>
+                </form>
+                <Button
+                    primary
+                    className={cx('button-cancel-submit')}
+                    onClick={() => {
+                        setShowWarranty(false);
+                    }}
+                >
+                    Huỷ
+                </Button>
+            </div>
         </div>
     );
 }

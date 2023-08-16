@@ -4,26 +4,35 @@
     height: 100%;
 }
 
-.buttons {
+.content-main {
+    position: absolute;
+    margin-top: 5%;
+    background-color: white;
+    border-radius: 10px;
+    width: 1850px;
+    height: 60vh;
+    padding: 20px;
+    left: 1%;
+}
+
+.content-main h1,
+h1 {
+    margin: 0;
     margin-bottom: 20px;
 }
 
-.device-infor {
-    background-color: white;
-    position: absolute;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.838);
-    width: 1600px;
-    left: 50%;
-    transform: translate(-50%, 0);
-    border-radius: 10px;
-    height: 800px;
-    width: 1700px;
+.content-main p {
+    padding: 10px;
 }
 
-.table {
-    margin-top: 20px;
-    margin-left: 45px;
-    margin-right: auto;
+.button-accept {
+    background-color: rgb(1, 181, 1);
+    border: rgb(1, 181, 1);
+    &:hover {
+        border-color: green;
+        background-color: green;
+        color: white;
+    }
 }
 
 .device-infor-detail {
@@ -31,7 +40,7 @@
     top: -500%;
     left: 50%;
     transform: translate(-50%, -50%);
-    width: 600px;
+    width: 1200px;
     height: 700px;
     background-color: white;
     padding: 20px;
@@ -39,6 +48,7 @@
     z-index: 9999;
     opacity: 0;
     transition: opacity 0.5s, transform 0.3s;
+    display: flex;
 }
 
 .device-infor-detail.show {
@@ -50,6 +60,8 @@
 
 .button-cancel {
     margin-left: 80%;
+    position: absolute;
+    left: 120px;
 }
 
 .device-infor-detail.show p {
@@ -69,7 +81,7 @@
 
 .overlay {
     position: absolute;
-    top: -20px;
+    top: -0px;
     left: 0;
     width: 100%;
     height: 100%;
@@ -83,4 +95,20 @@
 
 .device-infor h1 {
     padding: 10px;
+}
+.coupon-block {
+    width: 40%;
+    margin-right: 5%;
+    border-radius: 10px;
+    border: solid 1px black;
+}
+.device-block p,
+.coupon-block p {
+    word-wrap: break-word;
+}
+.device-block {
+    width: 45%;
+    margin-right: 5%;
+    border-radius: 10px;
+    border: solid 1px black;
 }

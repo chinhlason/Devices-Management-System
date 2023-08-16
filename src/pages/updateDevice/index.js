@@ -1,17 +1,16 @@
 import { useLocation } from 'react-router-dom';
 import httpRequest from '~/utils/htppRequest';
-import { useForm, Controller, formState } from 'react-hook-form';
+import { useForm } from 'react-hook-form';
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { createBrowserHistory } from 'history';
 
 import styles from './updateDevice.module.scss';
 import classNames from 'classnames/bind';
 import Button from '~/components/Button';
 const cx = classNames.bind(styles);
 
-const EXPORT_URL = '/phieuxuat/add';
 const DEVICE_URL = '/device/list';
-const USER_URL = '/user/list';
 const UPDATE_URL = '/device/update?id=1';
 
 function UpdateDevices() {
@@ -20,10 +19,10 @@ function UpdateDevices() {
     const queryParams = new URLSearchParams(location.search);
     const serial = queryParams.get('serial');
     const [deviceInfor, setDeviceInfo] = useState('');
+    const history = createBrowserHistory();
     const {
         register,
         handleSubmit,
-        control,
         formState: { errors },
     } = useForm();
     useEffect(() => {
@@ -63,9 +62,6 @@ function UpdateDevices() {
             });
     };
 
-    const handleCancel = () => {
-        navigate('/service');
-    };
     return (
         <div>
             <div className={cx('back-ground-img')}></div>
@@ -128,7 +124,14 @@ function UpdateDevices() {
                         Gửi
                     </Button>
                 </form>
-                <Button className={cx('button-cancel')} primary type onClick={handleCancel}>
+                <Button
+                    className={cx('button-cancel')}
+                    primary
+                    type
+                    onClick={() => {
+                        history.back();
+                    }}
+                >
                     Huỷ
                 </Button>
             </div>
