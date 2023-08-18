@@ -18,7 +18,12 @@ function HandOver() {
     const navigate = useNavigate();
     const location = useLocation();
     const history = createBrowserHistory();
-
+    const {
+        register,
+        handleSubmit,
+        control,
+        formState: { errors },
+    } = useForm();
     const queryParams = new URLSearchParams(location.search);
     const serial = queryParams.get('serial');
     const username = localStorage.getItem('username');
@@ -66,7 +71,6 @@ function HandOver() {
             });
     };
 
-    console.log('ssss', showData[0]);
     useEffect(() => {
         if (showData.length > 0) {
             httpRequest
@@ -80,7 +84,21 @@ function HandOver() {
                 });
         }
     }, [showData]);
-    console.log('ssds', showDataUser);
+    const onSubmit = (data) => {
+        console.log('checker', data.input);
+        httpRequest
+            .get(`/warrantycard/transfer?id=${showData[0].id}&price=${data.input}`, {
+                withCredentials: true,
+            })
+            .then((response) => {
+                console.log('sda', response.data);
+                alert('Bàn giao thành công');
+                navigate('/service');
+            })
+            .catch((err) => {
+                console.log(err);
+            });
+    };
     return (
         <div className={cx('wrapper')}>
             <div className={cx('back-ground-img')}></div>
@@ -115,11 +133,21 @@ function HandOver() {
                             {showDataUser.tenBan}, Viện : {showDataUser.tenVien}
                         </p>
                         <p>Người xác nhận : {showData[0].confirmer}</p>
-                    </div>
+                        <form onSubmit={handleSubmit(onSubmit)}>
+                            <input
+                                className={cx('form-box')}
+                                placeholder="Chi phí bảo hành"
+                                {...register('input', {
+                                    required: 'Vui lòng nhập chi phí bảo hành',
+                                })}
+                            ></input>
+                            <p className={cx('error')}>{errors.input?.message}</p>
 
-                    <Button primary onClick={handleHandOver} className={cx('submit-btn')}>
-                        Bàn giao
-                    </Button>
+                            <Button primary type="submit" className={cx('submit-btn')}>
+                                Bàn giao
+                            </Button>
+                        </form>
+                    </div>
                 </>
             ) : (
                 <p>No data available.</p>

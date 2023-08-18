@@ -111,16 +111,35 @@ function ProfileUser() {
                 <div className={cx('wrapper')}>
                     <h1>Thông tin người dùng</h1>
                     <div className={cx('user-infor')}>
-                        <p>Tên tài khoản : {username}</p>
-                        <p>Tên người dùng : {name}</p>
-                        <p>Vai trò : {role}</p>
-                        <p>Email : {email}</p>
-                        <p>Ngày sinh : {birthDate}</p>
-                        <p>Số điện thoại : {phone}</p>
-                        <p>Ngày tạo tài khoản : {joinDate}</p>
-                        <p>Tên viện : {tenVien}</p>
-                        <p>Tên phòng : {tenPhong}</p>
-                        <p>Tên ban : {tenBan}</p>
+                        <div>
+                            Tên người dùng : <span className={cx('text')}>{name}</span>
+                        </div>
+                        <div>
+                            Vai trò : <span className={cx('text')}>{role}</span>
+                        </div>
+                        <div>
+                            Email : <span className={cx('text')}>{email}</span>
+                        </div>
+                        <div>
+                            Ngày sinh : <span className={cx('text')}>{birthDate}</span>
+                        </div>
+                        <div>
+                            Số điện thoại : <span className={cx('text')}>{phone}</span>
+                        </div>
+                        <div>
+                            Ngày tạo tài khoản : <span className={cx('text')}>{joinDate}</span>
+                        </div>
+                        <div>
+                            Tên viện : <span className={cx('text')}>{tenVien}</span>
+                        </div>
+                        <div>
+                            Tên phòng : <span className={cx('text')}>{tenPhong}</span>
+                        </div>
+                        <div>
+                            Tên ban : <span className={cx('text')}>{tenBan}</span>
+                        </div>
+                    </div>
+                    <div>
                         <Button className={cx('button-left')} primary onClick={handleChangePassword}>
                             Đổi mật khẩu
                         </Button>
@@ -139,7 +158,7 @@ function ProfileUser() {
                                     required: 'Vui lòng nhập mật khẩu',
                                 })}
                             />
-                            <p>{errors.oldPassword?.message}</p>
+                            <div classname={cx('test')}>{errors.oldPassword?.message}</div>
                             <input
                                 className={cx('form-box')}
                                 placeholder="Nhập mật khẩu mới"
@@ -148,7 +167,7 @@ function ProfileUser() {
                                     required: 'Vui lòng nhập mật khẩu mới',
                                 })}
                             />
-                            <p>{errors.newPassword?.message}</p>
+                            <div classname={cx('test')}>{errors.newPassword?.message}</div>
                             <input
                                 className={cx('form-box')}
                                 placeholder="Nhập lại mật khẩu mới"
@@ -157,7 +176,7 @@ function ProfileUser() {
                                     required: 'Vui lòng nhập lại mật khẩu',
                                 })}
                             />
-                            <p>{errors.reNewPassword?.message}</p>
+                            <div classname={cx('test')}>{errors.reNewPassword?.message}</div>
                         </div>
                         <Button className={cx('button-right')} primary type="submit">
                             Gửi

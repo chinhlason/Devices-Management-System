@@ -28,14 +28,20 @@ function CategoryDevice() {
     );
     const columnDefs = useMemo(
         () => [
+            {
+                headerName: 'STT',
+                valueGetter: 'node.rowIndex + 1',
+                sortable: false,
+                width: 70,
+            },
             { field: 'name', headerName: 'TÊN THIẾT BỊ', filter: true },
             { field: 'serial', headerName: 'SERIAL', filter: true },
-            { field: 'price', headerName: 'Giá tiền' },
+            { field: 'price', headerName: 'Giá tiền', width: 140 },
             { field: 'warrantyTime', headerName: 'Thời hạn bảo hành', filter: true },
             { field: 'maintenanceTime', headerName: 'Chu kì bảo trì', filter: true },
             { field: 'status', headerName: 'Trạng thái xuất', filter: true },
             { field: 'warrantyStatus', headerName: 'Trạng thái bảo hành', filter: true },
-            { field: 'maintenanceStatus', headerName: 'Trạng thái bảo trì', filter: true },
+            { field: 'maintenanceStatus', headerName: 'Trạng thái bảo trì', filter: true, flex: 1 },
         ],
         [],
     );
@@ -102,7 +108,7 @@ function CategoryDevice() {
     }, []);
 
     const handleUpdate = (data) => {
-        navigate(`/updatedevice?serial=${data.serial}`);
+        navigate(`/updatedevice?id=${data.id}`);
     };
 
     const handleExport = (data) => {
@@ -200,7 +206,7 @@ function CategoryDevice() {
                         navigate('/search');
                     }}
                 >
-                    Tìm kiếm{' '}
+                    Tìm kiếm thiết bị{' '}
                 </Button>
                 <div className={cx('table', { hide: showDetail })}>
                     <div className="ag-theme-alpine" style={{ width: 1610, height: 630 }}>

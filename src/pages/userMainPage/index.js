@@ -19,14 +19,20 @@ function MainPage() {
     const navigate = useNavigate();
     const columnDefs = useMemo(
         () => [
-            { field: 'name', headerName: 'TÊN THIẾT BỊ', filter: true },
-            { field: 'serial', headerName: 'SERIAL', filter: true },
-            { field: 'price', headerName: 'Giá tiền' },
-            { field: 'warrantyTime', headerName: 'Thời hạn bảo hành', filter: true },
-            { field: 'maintenanceTime', headerName: 'Chu kì bảo trì', filter: true },
-            { field: 'status', headerName: 'Trạng thái xuất', filter: true },
-            { field: 'warrantyStatus', headerName: 'Trạng thái bảo hành', filter: true },
-            { field: 'maintenanceStatus', headerName: 'Trạng thái bảo trì', filter: true },
+            {
+                headerName: 'STT',
+                valueGetter: 'node.rowIndex + 1',
+                sortable: false,
+                width: 70,
+            },
+            { field: 'name', headerName: 'TÊN THIẾT BỊ', filter: true, flex: 1 },
+            { field: 'serial', headerName: 'SERIAL', filter: true, width: 150 },
+            { field: 'price', headerName: 'Giá tiền', width: 150 },
+            { field: 'warrantyTime', headerName: 'Thời hạn bảo hành', filter: true, width: 150 },
+            { field: 'maintenanceTime', headerName: 'Chu kì bảo trì', filter: true, width: 150 },
+            { field: 'status', headerName: 'Trạng thái xuất', filter: true, width: 150 },
+            { field: 'warrantyStatus', headerName: 'Trạng thái bảo hành', filter: true, width: 200 },
+            { field: 'maintenanceStatus', headerName: 'Trạng thái bảo trì', filter: true, width: 180 },
         ],
         [],
     );

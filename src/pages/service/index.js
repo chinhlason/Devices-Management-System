@@ -21,14 +21,21 @@ const Service = () => {
 
     const columnDefs = useMemo(
         () => [
-            { field: 'name', headerName: 'TÊN THIẾT BỊ', filter: true },
+            {
+                headerName: 'STT',
+                valueGetter: 'node.rowIndex + 1',
+                sortable: false,
+                width: 70,
+            },
+
+            { field: 'name', headerName: 'TÊN THIẾT BỊ', filter: true, width: 300 },
             { field: 'serial', headerName: 'SERIAL', filter: true },
-            { field: 'price', headerName: 'Giá tiền', filter: true },
-            { field: 'warrantyTime', headerName: 'Thời hạn bảo hành', filter: true },
-            { field: 'maintenanceTime', headerName: 'Chu kì bảo trì', filter: true },
+            { field: 'price', headerName: 'Giá tiền', filter: true, width: 150 },
+            { field: 'warrantyTime', headerName: 'Thời hạn bảo hành', filter: true, width: 170 },
+            { field: 'maintenanceTime', headerName: 'Chu kì bảo trì', filter: true, width: 150 },
             { field: 'status', headerName: 'Trạng thái xuất', filter: true },
             { field: 'warrantyStatus', headerName: 'Trạng thái bảo hành', filter: true },
-            { field: 'maintenanceStatus', headerName: 'Trạng thái bảo trì', filter: true },
+            { field: 'maintenanceStatus', headerName: 'Trạng thái bảo trì', filter: true, flex: 1 },
         ],
         [],
     );
@@ -147,7 +154,7 @@ const Service = () => {
     }, []);
 
     const handleUpdate = (data) => {
-        navigate(`/updatedevice?serial=${data.serial}`);
+        navigate(`/updatedevice?id=${data.id}`);
     };
 
     const handleExport = (data) => {
@@ -159,7 +166,15 @@ const Service = () => {
     };
 
     const handleMaintainanceState = (data) => {
-        console.log(1);
+        httpRequest
+            .get(`/device/confirm-maintance?serial=${data.serial}`, { withCredentials: true })
+            .then((response) => {
+                alert('Thay đổi trạng thái bảo trì thành công');
+                window.location.reload();
+            })
+            .catch((err) => {
+                console.log(err);
+            });
     };
 
     const handleAdd = (data) => {

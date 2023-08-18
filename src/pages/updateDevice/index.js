@@ -17,7 +17,8 @@ function UpdateDevices() {
     const navigate = useNavigate();
     const location = useLocation();
     const queryParams = new URLSearchParams(location.search);
-    const serial = queryParams.get('serial');
+    const id = queryParams.get('id');
+    console.log('id in', typeof id);
     const [deviceInfor, setDeviceInfo] = useState('');
     const history = createBrowserHistory();
     const {
@@ -30,8 +31,10 @@ function UpdateDevices() {
             .get(DEVICE_URL, { withCredentials: true })
             .then((response) => {
                 const responseInfor = response.data.find(function (device) {
-                    return device.serial === serial;
+                    console.log('id', typeof device.id);
+                    return device.id == id;
                 });
+                console.log('kq', responseInfor);
                 setDeviceInfo(responseInfor);
             })
             .catch((err) => {
@@ -39,6 +42,7 @@ function UpdateDevices() {
             });
     }, []);
     const onSubmit = (data) => {
+        console.log('data-check', data);
         const requestData = {
             name: data.name || deviceInfor?.name,
             serial: data.serial || deviceInfor?.serial,
@@ -49,11 +53,11 @@ function UpdateDevices() {
         };
         console.log(requestData);
         httpRequest
-            .put(UPDATE_URL, requestData, { withCredentials: true })
+            .put(`/device/update?id=${id}`, requestData, { withCredentials: true })
             .then((response) => {
                 console.log(response.data);
                 alert('Cập nhật thành công!');
-                navigate('/service');
+                history.back();
             })
             .catch((err) => {
                 if (err.response?.status === 400) {

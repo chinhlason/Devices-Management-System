@@ -26,8 +26,14 @@ function Department() {
     const navigate = useNavigate();
     const columnDefs = useMemo(
         () => [
-            { field: 'tenPhong', headerName: 'Tên phòng', filter: true },
-            { field: 'tenBan', headerName: 'Tên Ban', filter: true },
+            {
+                headerName: 'STT',
+                valueGetter: 'node.rowIndex + 1',
+                sortable: false,
+                width: 70,
+            },
+            { field: 'tenPhong', headerName: 'Tên phòng', filter: true, width: 120 },
+            { field: 'tenBan', headerName: 'Tên Ban', filter: true, width: 120 },
             { field: 'tenVien', headerName: 'Tên Viện' },
             { field: 'name', headerName: 'Tên người quản lý', filter: true },
             { field: 'username', headerName: 'Tên tài khoản quản lý', filter: true },
@@ -49,11 +55,10 @@ function Department() {
                         </Button>
                     </div>
                 ),
-                width: 150,
-                height: 40,
                 suppressMenu: true,
-                sortable: false,
                 filter: false,
+                cellStyle: { textAlign: 'center' },
+                flex: 1,
             },
         ],
         [],
@@ -61,6 +66,12 @@ function Department() {
 
     const columnDefsmini = useMemo(
         () => [
+            {
+                headerName: 'STT',
+                valueGetter: 'node.rowIndex + 1',
+                sortable: false,
+                width: 70,
+            },
             { field: 'name', headerName: 'TÊN THIẾT BỊ', filter: true },
             { field: 'serial', headerName: 'SERIAL', filter: true },
             { field: 'price', headerName: 'Giá tiền' },
@@ -69,7 +80,7 @@ function Department() {
             { field: 'status', headerName: 'Trạng thái xuất', filter: true },
             { field: 'warrantyStatus', headerName: 'Trạng thái bảo hành', filter: true },
             { field: 'maintenanceStatus', headerName: 'Trạng thái bảo trì', filter: true },
-            { field: 'exporter', headerName: 'Người xuất', filter: true },
+            { field: 'exporter', headerName: 'Người xuất', filter: true, flex: 1 },
         ],
         [],
     );

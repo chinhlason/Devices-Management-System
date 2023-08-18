@@ -15,13 +15,16 @@ const USER_URL = '/user/list';
 function Profile() {
     const navigate = useNavigate();
     const [showConfirm, setShowConfirm] = useState(false);
+    const [showOption, setShowOption] = useState('');
     const handleChange = (id) => {
         navigate(`/update?id=${id}`);
     };
-    const handleDisable = (id) => {
+    const handleDisable = (id, option) => {
         setShowConfirm(true);
         setInforDisable(id);
+        setShowOption(option);
     };
+
     const gridRef = useRef();
     const [rowData, setRowData] = useState([]);
     const [showDetail, setShowDetail] = useState([]);
@@ -36,16 +39,23 @@ function Profile() {
     );
     const columnDefs = useMemo(
         () => [
-            { field: 'username', headerName: 'Username', filter: true, width: 140 },
-            { field: 'fullname', headerName: 'Tên người dùng', filter: true, width: 200 },
+            {
+                headerName: 'STT',
+                valueGetter: 'node.rowIndex + 1',
+                sortable: false,
+                width: 70,
+            },
+            { field: 'username', headerName: 'Username', filter: true, width: 150 },
+            { field: 'fullname', headerName: 'Tên người dùng', filter: true, width: 180 },
             { field: 'roles', headerName: 'Quyền hạn', filter: true, width: 140 },
             { field: 'email', headerName: 'Email', filter: true, width: 220 },
             { field: 'phone', headerName: 'Số điện thoại', filter: true, width: 140 },
             { field: 'birthDate', headerName: 'Ngày sinh', filter: true, width: 140 },
             { field: 'joinDate', headerName: 'Ngày tạo', filter: true },
-            { field: 'tenPhong', headerName: 'Tên Phòng', filter: true, width: 140 },
-            { field: 'tenBan', headerName: 'Tên Ban', filter: true, width: 140 },
-            { field: 'tenVien', headerName: 'Tên viện', filter: true },
+            { field: 'tenPhong', headerName: 'Tên Phòng', filter: true, width: 120 },
+            { field: 'tenBan', headerName: 'Tên Ban', filter: true, width: 120 },
+            { field: 'tenVien', headerName: 'Tên viện', filter: true, width: 150 },
+            { field: 'enabled', headerName: 'Khả dụng', filter: true, flex: 1 },
         ],
         [],
     );
@@ -93,9 +103,19 @@ function Profile() {
             },
             disable: {
                 name: 'Vô hiệu hoá tài khoản',
-                action: () => handleDisable(username),
+                action: () => handleDisable(username, 'vô hiệu hoá'),
+            },
+            enable: {
+                name: 'Kích hoạt tài khoản',
+                action: () => handleDisable(username, 'kích hoạt'),
             },
         };
+        if (selectedRow.enabled == true) {
+            delete options.enable;
+        }
+        if (selectedRow.enabled == false) {
+            delete options.disable;
+        }
         showContextMenu(params.event.clientX, params.event.clientY, options);
     }, []);
 
@@ -159,9 +179,7 @@ function Profile() {
                 console.log(err);
             });
     };
-
-    console.log(showDetail);
-    console.log('kk', inforDisable);
+    console.log('showoption', showOption);
     return (
         <div className={cx('mainpage', { hide: showInfor })}>
             <div className={cx('back-ground-img')}></div>
@@ -175,7 +193,7 @@ function Profile() {
             <div className={cx('wrapper')}>
                 <div className={cx('table')}>
                     <h1>Bảng danh sách người dùng</h1>
-                    <div className="ag-theme-alpine" style={{ width: 1670, height: 500 }}>
+                    <div className="ag-theme-alpine" style={{ width: 1790, height: 500 }}>
                         <Button className={cx('button')} primary onClick={handleSignup}>
                             Thêm người dùng
                         </Button>
@@ -223,7 +241,7 @@ function Profile() {
                 }}
             ></div>
             <div className={cx('confirm-box', { show: showConfirm })}>
-                Xác nhận vô hiệu hoá tài khoản {inforDisable} ?
+                Xác nhận {showOption} tài khoản {inforDisable} ?
                 <Button
                     primary
                     className={cx('confirm-btn')}
@@ -233,6 +251,7 @@ function Profile() {
                             .then((response) => {
                                 setShowConfirm(false);
                                 alert('thành công');
+                                window.location.reload();
                             })
                             .catch((err) => {
                                 console.log(err);

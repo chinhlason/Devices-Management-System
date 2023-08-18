@@ -60,12 +60,18 @@ function ImportCoupon() {
     const navigate = useNavigate();
     const columnDefs = useMemo(
         () => [
-            { field: 'id', headerName: 'ID', filter: true },
+            {
+                headerName: 'STT',
+                valueGetter: 'node.rowIndex + 1',
+                sortable: false,
+                width: 70,
+            },
+            { field: 'id', headerName: 'ID', filter: true, width: 120 },
             { field: 'companyName', headerName: 'Đơn vị cung cấp', filter: true },
             { field: 'exporter', headerName: 'Người tiếp nhận', filter: true },
             { field: 'number', headerName: 'Số lượng sản phẩm', filter: true },
             { field: 'name', headerName: 'Tên sản phẩm' },
-            { field: 'dateImport', headerName: 'Ngày nhập', filter: true },
+            { field: 'dateImport', headerName: 'Ngày nhập', filter: true, flex: 1 },
             {
                 headerName: '',
                 field: 'actions',
@@ -92,6 +98,12 @@ function ImportCoupon() {
 
     const columnDefsmini = useMemo(
         () => [
+            {
+                headerName: 'STT',
+                valueGetter: 'node.rowIndex + 1',
+                sortable: false,
+                width: 70,
+            },
             { field: 'name', headerName: 'TÊN THIẾT BỊ', filter: true },
             { field: 'serial', headerName: 'SERIAL', filter: true },
             { field: 'price', headerName: 'Giá tiền' },

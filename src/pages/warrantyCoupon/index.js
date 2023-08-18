@@ -22,6 +22,7 @@ function WarrantyCoupon() {
     const [dataMiniPage, setDataMiniPage] = useState([]);
     const [dataMiniTable, setDataMiniTable] = useState([]);
     const [isOpenMiniPage, setIsOpenMiniPage] = useState(false);
+    const [isOpenMiniPage2, setIsOpenMiniPage2] = useState(false);
     const [dataMiniPageSearched, setDataMiniPageSearched] = useState([]);
     const [showSearchSite, setShowSearchSite] = useState(false);
     const [dataMiniTableSearched, setDataMiniTableSearched] = useState([]);
@@ -53,7 +54,7 @@ function WarrantyCoupon() {
         const data = warrantyCoupon.map((element) => {
             return {
                 id: element.id,
-                date: element.date,
+                date: element.createAt,
                 handoverDate: element.handoverDate,
                 receiver: element.receiver,
                 confirmer: element.confirmer,
@@ -69,6 +70,12 @@ function WarrantyCoupon() {
 
     const columnDefsmini = useMemo(
         () => [
+            {
+                headerName: 'STT',
+                valueGetter: 'node.rowIndex + 1',
+                sortable: false,
+                width: 70,
+            },
             { field: 'name', headerName: 'TÊN THIẾT BỊ', filter: true },
             { field: 'serial', headerName: 'SERIAL', filter: true },
             { field: 'price', headerName: 'Giá tiền' },
@@ -82,6 +89,12 @@ function WarrantyCoupon() {
 
     const columnDefs = useMemo(
         () => [
+            {
+                headerName: 'STT',
+                valueGetter: 'node.rowIndex + 1',
+                sortable: false,
+                width: 70,
+            },
             { field: 'id', headerName: 'ID', filter: true, width: 120 },
             { field: 'date', headerName: 'Ngày tạo phiếu', filter: true, width: 160 },
             { field: 'handoverDate', headerName: 'Ngày bàn giao', filter: true, width: 160 },
@@ -115,6 +128,49 @@ function WarrantyCoupon() {
         ],
         [],
     );
+
+    const columnDefs2 = useMemo(
+        () => [
+            {
+                headerName: 'STT',
+                valueGetter: 'node.rowIndex + 1',
+                sortable: false,
+                width: 70,
+            },
+            { field: 'id', headerName: 'ID', filter: true, width: 120 },
+            { field: 'date', headerName: 'Ngày tạo phiếu', filter: true, width: 160 },
+            { field: 'handoverDate', headerName: 'Ngày bàn giao', filter: true, width: 160 },
+            { field: 'receiver', headerName: 'Người yêu cầu', filter: true, width: 150 },
+            { field: 'confirmer', headerName: 'Người xác nhận', filter: true, width: 160 },
+            { field: 'note', headerName: 'Ghi chú', filter: true, width: 160 },
+            { field: 'name', headerName: 'Tên sản phẩm', filter: true },
+            { field: 'serial', headerName: 'Serial', filter: true, width: 120 },
+            { field: 'status', headerName: 'Trạng thái bảo hành', filter: true },
+            { field: 'confirmStatus', headerName: 'Trạng thái xác nhận', filter: true },
+            {
+                headerName: '',
+                field: 'actions',
+                cellRenderer: ({ data }) => (
+                    <div>
+                        <Button
+                            primary
+                            onClick={() => {
+                                handleMenuClick2(data);
+                            }}
+                        >
+                            Xem chi tiết
+                        </Button>
+                    </div>
+                ),
+                width: 150,
+                suppressMenu: true,
+                sortable: false,
+                filter: false,
+            },
+        ],
+        [],
+    );
+
     const handleMenuClick = (rowData2) => {
         setIsOpenMiniPage(true);
         httpRequest
@@ -124,13 +180,52 @@ function WarrantyCoupon() {
                 console.log(data);
                 const dataImport = {
                     id: data.id,
-                    date: data.date,
+                    createAt: data.createAt,
                     handoverDate: data.handoverDate,
                     receiver: data.receiver,
                     confirmer: data.confirmer,
                     note: data.note,
                     status: data.status,
                     confirmStatus: data.confirmStatus,
+                    price: data.price,
+                };
+                console.log(data.device);
+                setDataMiniPage(dataImport);
+                const devices = {
+                    name: data.device.name,
+                    serial: data.device.serial,
+                    price: data.device.price,
+                    warrantyTime: data.device.warrantyTime,
+                    maintenanceTime: data.device.maintenanceTime,
+                    warrantyStatus: data.device.warrantyStatus,
+                    maintenanceStatus: data.device.maintenanceStatus,
+                };
+                console.log('s', devices);
+                setDataMiniTable([devices]);
+                console.log('ss', dataMiniTable);
+            })
+            .catch((err) => {
+                console.log(err);
+            });
+    };
+
+    const handleMenuClick2 = (rowData2) => {
+        setIsOpenMiniPage2(true);
+        httpRequest
+            .get(`/warrantycard?id=${rowData2.id}`, { withCredentials: true })
+            .then((response) => {
+                const data = response.data;
+                console.log(data);
+                const dataImport = {
+                    id: data.id,
+                    createAt: data.createAt,
+                    handoverDate: data.handoverDate,
+                    receiver: data.receiver,
+                    confirmer: data.confirmer,
+                    note: data.note,
+                    status: data.status,
+                    confirmStatus: data.confirmStatus,
+                    price: data.price,
                 };
                 console.log(data.device);
                 setDataMiniPage(dataImport);
@@ -240,38 +335,33 @@ function WarrantyCoupon() {
             });
         setShowDetail(true);
     };
-
+    console.log('checkkk', dataMiniPageSearched);
     const onSubmit = (data) => {
+        console.log('dataserial', data.serial);
         httpRequest
-            .get(`http://localhost:8080/api/phieuxuat/get-by-serial-device?serial=${data.serial}`, {
+            .get(`/warrantycard/list-by-serial-device?serial=${data.serial}`, {
                 withCredentials: true,
             })
             .then((response) => {
-                const data_searched = {
-                    id: response.data.id,
-                    date: response.data.date,
-                    handoverDate: response.data.handoverDate,
-                    receiver: response.data.receiver,
-                    confirmer: response.data.confirmer,
-                    note: response.data.note,
-                    status: response.data.status,
-                    confirmStatus: response.data.confirmStatus,
-                };
-                const data_table = response.data.devices.map((element) => {
+                console.log('data tim dc', response.data);
+                const data_searched = response.data.map((element) => {
                     return {
-                        name: element.name,
-                        serial: element.serial,
-                        price: element.price,
-                        warrantyTime: element.warrantyTime,
-                        maintenanceTime: element.maintenanceTime,
+                        id: element.id,
+                        date: element.createAt,
+                        handoverDate: element.handoverDate,
+                        receiver: element.receiver,
+                        confirmer: element.confirmer,
+                        note: element.note,
+                        name: element.device.name,
+                        serial: element.device.serial,
+                        status: element.status,
+                        confirmStatus: element.confirmStatus,
                     };
                 });
                 setDataMiniPageSearched(data_searched);
-                setDataMiniTableSearched(data_table);
             })
             .catch((err) => {
                 console.log(err);
-                alert('Không tìm thấy thiết bị tương ứng!');
             });
     };
 
@@ -339,28 +429,56 @@ function WarrantyCoupon() {
                             >
                                 X
                             </Button>
-                            <div className={cx('infor-coupon-searched')}>
-                                <h1>Chi tiết phiếu bảo hành</h1>
-                                <p>ID phiếu bảo hành : {dataMiniPageSearched.id}</p>
-                                <p>Ngày tạo phiếu : {dataMiniPageSearched.date}</p>
-                                <p>Ngày bàn giao : {dataMiniPageSearched.handoverDate}</p>
-                                <p>Người yêu cầu : {dataMiniPageSearched.receiver}</p>
-                                <p>Người xác nhận: {dataMiniPageSearched.confirmer}</p>
-                                <p>Ghi chú : {dataMiniPageSearched.note}</p>
-                                <p>Trạng thái bảo hành : {dataMiniPageSearched.status}</p>
-                                <p>Trạng thái xác nhận : {dataMiniPageSearched.confirmStatus}</p>
-                            </div>
-                            <div className={cx('table-2-searched')}>
-                                <div className="ag-theme-alpine" style={{ width: 1370, height: 600 }}>
-                                    <h1>Bảng thiết bị bảo hành({dataMiniPageSearched.number})</h1>
+
+                            <div className={cx('table-2-searched', { hide: isOpenMiniPage2 })}>
+                                <div className="ag-theme-alpine" style={{ width: 1790, height: 600 }}>
+                                    <h1>Bảng phiếu bảo hành</h1>
                                     <AgGridReact
                                         ref={gridRef}
-                                        rowData={dataMiniTableSearched}
-                                        columnDefs={columnDefsmini}
+                                        rowData={dataMiniPageSearched}
+                                        columnDefs={columnDefs2}
                                         defaultColDef={defaultColDef}
                                         animateRows={true}
-                                        onCellContextMenu={cellContextMenuListener}
                                     />
+                                </div>
+                            </div>
+
+                            <div className={cx('search-results')}>
+                                <div className={cx('wrapper-3', { show: isOpenMiniPage2 })}>
+                                    <div className={cx('infor-coupon-3')}>
+                                        <h1>Chi tiết phiếu bảo hành</h1>
+                                        <p>ID phiếu bảo hành : {dataMiniPage.id}</p>
+                                        <p>Ngày tạo phiếu : {dataMiniPage.createAt}</p>
+                                        <p>Ngày bàn giao : {dataMiniPage.handoverDate}</p>
+                                        <p>Người yêu cầu : {dataMiniPage.receiver}</p>
+                                        <p>Người xác nhận: {dataMiniPage.confirmer}</p>
+                                        <p>Ghi chú : {dataMiniPage.note}</p>
+                                        <p>Trạng thái bảo hành : {dataMiniPage.status}</p>
+                                        <p>Trạng thái xác nhận : {dataMiniPage.confirmStatus}</p>
+                                        <p>Chi phí : {dataMiniPage.price}</p>
+                                    </div>
+                                    <div className={cx('table-3')}>
+                                        <div className="ag-theme-alpine" style={{ width: 1370, height: 600 }}>
+                                            <h2>Bảng thiết bị bảo hành</h2>
+                                            <AgGridReact
+                                                ref={gridRef}
+                                                rowData={dataMiniTable}
+                                                columnDefs={columnDefsmini}
+                                                defaultColDef={defaultColDef}
+                                                animateRows={true}
+                                                onCellContextMenu={cellContextMenuListener}
+                                            />
+                                        </div>
+                                        <Button
+                                            className={cx('button-back')}
+                                            primary
+                                            onClick={() => {
+                                                setIsOpenMiniPage2(false);
+                                            }}
+                                        >
+                                            Quay lại
+                                        </Button>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -378,13 +496,14 @@ function WarrantyCoupon() {
                         <div className={cx('infor-coupon')}>
                             <h1>Chi tiết phiếu bảo hành</h1>
                             <p>ID phiếu bảo hành : {dataMiniPage.id}</p>
-                            <p>Ngày tạo phiếu : {dataMiniPage.date}</p>
+                            <p>Ngày tạo phiếu : {dataMiniPage.createAt}</p>
                             <p>Ngày bàn giao : {dataMiniPage.handoverDate}</p>
                             <p>Người yêu cầu : {dataMiniPage.receiver}</p>
                             <p>Người xác nhận: {dataMiniPage.confirmer}</p>
                             <p>Ghi chú : {dataMiniPage.note}</p>
                             <p>Trạng thái bảo hành : {dataMiniPage.status}</p>
                             <p>Trạng thái xác nhận : {dataMiniPage.confirmStatus}</p>
+                            <p>Chi phí : {dataMiniPage.price}</p>
                         </div>
                         <div className={cx('table-2')}>
                             <div className="ag-theme-alpine" style={{ width: 1370, height: 600 }}>

@@ -20,6 +20,12 @@ const AddDevice = () => {
     const [rowData, setRowData] = useState([]); // Set rowData to Array of Objects, one Object per Row
     const columnDefs = useMemo(
         () => [
+            {
+                headerName: 'STT',
+                valueGetter: 'node.rowIndex + 1',
+                sortable: false,
+                width: 70,
+            },
             { field: 'name', headerName: 'TÊN THIẾT BỊ', filter: true },
             { field: 'serial', headerName: 'SERIAL', filter: true },
             { field: 'price', headerName: 'Giá tiền' },

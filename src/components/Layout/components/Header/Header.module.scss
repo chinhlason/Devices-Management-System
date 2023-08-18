@@ -105,7 +105,6 @@ input:not(:placeholder-shown) ~ .search-btn {
 
 .noti-content {
     width: 500px;
-    max-height: min((100vh - 96px) - 60px, 734px);
     min-height: 100px;
     padding-top: 8px;
     border-radius: 8px;
@@ -120,4 +119,84 @@ input:not(:placeholder-shown) ~ .search-btn {
     font-weight: 600;
     color: rgba(22, 24, 35, 0.5);
     border-bottom: 1px black solid;
+}
+.wrapper-2 {
+    display: block;
+    align-items: center;
+    padding: 6px 16px;
+    max-height: 600px;
+    overflow: auto;
+    cursor: pointer;
+
+    &:hover {
+        background: rgba(22, 24, 35, 0.03);
+    }
+}
+
+.avatar {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+.info {
+    flex: 1;
+    margin-left: 12px;
+}
+
+.name {
+    font-size: 2rem;
+    font-weight: 500;
+}
+
+.check {
+    margin-left: 6px;
+    color: rgb(32, 213, 236);
+}
+
+.content {
+    font-size: 1.8rem;
+    color: rgba(17, 18, 26, 0.8);
+}
+
+.noti-contents {
+    padding-bottom: 10px;
+    border-bottom: 1px black solid;
+}
+.name.bold {
+    font-weight: bold;
+}
+.content.bold {
+    font-weight: bold;
+    padding-left: -10px;
+}
+.noti-contents.bold {
+    background-color: rgba(203, 200, 200, 0.272);
+    border-radius: 10px;
+}
+
+.noti-contents:hover {
+    flex: 1;
+    background-color: rgba(173, 173, 173, 0.735);
+    border-radius: 10px;
+}
+
+.noti-warn {
+    display: none;
+}
+
+.noti-warn.on {
+    height: 20px;
+    width: 20px;
+    background-color: red;
+    color: white;
+    font-size: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    position: absolute;
+    right: 0;
+    top: 5px;
 }

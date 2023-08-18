@@ -11,6 +11,7 @@ import { faMagnifyingGlass } from '@fortawesome/free-solid-svg-icons';
 import styles from './exportCoupon.module.scss';
 import classNames from 'classnames/bind';
 import Button from '~/components/Button';
+import axios from 'axios';
 const cx = classNames.bind(styles);
 
 const EXPORT_URL = '/phieuxuat/list';
@@ -23,6 +24,8 @@ function ExportCoupon() {
     const { register, handleSubmit, setValue } = useForm();
     const [dataMiniPageSearched, setDataMiniPageSearched] = useState([]);
     const [dataMiniTableSearched, setDataMiniTableSearched] = useState([]);
+    const [confirmDelete, setComfirmDelete] = useState(false);
+    const [dataDelete, setDataDelete] = useState([]);
     useEffect(() => {
         httpRequest
             .get(EXPORT_URL, { withCredentials: true })
@@ -60,12 +63,18 @@ function ExportCoupon() {
     const navigate = useNavigate();
     const columnDefs = useMemo(
         () => [
-            { field: 'id', headerName: 'ID', filter: true },
+            {
+                headerName: 'STT',
+                valueGetter: 'node.rowIndex + 1',
+                sortable: false,
+                width: 70,
+            },
+            { field: 'id', headerName: 'ID', filter: true, width: 100 },
             { field: 'exporter', headerName: 'Người xuất', filter: true },
             { field: 'receiver', headerName: 'Người tiếp nhận', filter: true },
             { field: 'number', headerName: 'Số lượng sản phẩm', filter: true },
             { field: 'name', headerName: 'Tên sản phẩm' },
-            { field: 'dateExport', headerName: 'Ngày xuất', filter: true },
+            { field: 'dateExport', headerName: 'Ngày xuất', filter: true, flex: 1 },
             {
                 headerName: '',
                 field: 'actions',
@@ -86,17 +95,43 @@ function ExportCoupon() {
                 sortable: false,
                 filter: false,
             },
+            {
+                headerName: '',
+                field: 'actions',
+                cellRenderer: ({ data }) => (
+                    <div>
+                        <Button
+                            primary
+                            onClick={() => {
+                                handleDelete(data);
+                            }}
+                        >
+                            Xoá
+                        </Button>
+                    </div>
+                ),
+                width: 150,
+                suppressMenu: true,
+                sortable: false,
+                filter: false,
+            },
         ],
         [],
     );
 
     const columnDefsmini = useMemo(
         () => [
+            {
+                headerName: 'STT',
+                valueGetter: 'node.rowIndex + 1',
+                sortable: false,
+                width: 70,
+            },
             { field: 'name', headerName: 'TÊN THIẾT BỊ', filter: true },
             { field: 'serial', headerName: 'SERIAL', filter: true },
             { field: 'price', headerName: 'Giá tiền' },
             { field: 'warrantyTime', headerName: 'Thời hạn bảo hành', filter: true },
-            { field: 'maintenanceTime', headerName: 'Chu kì bảo trì', filter: true },
+            { field: 'maintenanceTime', headerName: 'Chu kì bảo trì', filter: true, flex: 1 },
         ],
         [],
     );
@@ -260,12 +295,24 @@ function ExportCoupon() {
             });
     };
 
+    const handleDelete = (data) => {
+        console.log('checker', data.id);
+        setComfirmDelete(true);
+        setDataDelete(data);
+    };
+
     return (
         <div className={cx('content-all')}>
             <div
                 className={cx('overlay-2', { show: showSearchSite })}
                 onClick={() => {
                     setShowSearchSite(false);
+                }}
+            ></div>
+            <div
+                className={cx('overlay-3', { show: confirmDelete })}
+                onClick={() => {
+                    setComfirmDelete(false);
                 }}
             ></div>
             <div className={cx('back-ground-img')}></div>
@@ -283,7 +330,7 @@ function ExportCoupon() {
                         Tìm kiếm phiếu xuất theo Serial thiết bị{' '}
                     </Button>
                     <div className={cx('table')}>
-                        <div className="ag-theme-alpine" style={{ width: 1360, height: 500 }}>
+                        <div className="ag-theme-alpine" style={{ width: 1510, height: 500 }}>
                             <h1>Danh sách phiếu xuất</h1>
                             <AgGridReact
                                 ref={gridRef}
@@ -344,6 +391,39 @@ function ExportCoupon() {
                                 </div>
                             </div>
                         </div>
+                    </div>
+
+                    <div className={cx('delete-box', { show: confirmDelete })}>
+                        <h2>Xác nhận xoá phiếu xuất id : {dataDelete.id} ?</h2>
+                        <Button
+                            primary
+                            className={cx('cancel-btn')}
+                            onClick={() => {
+                                setComfirmDelete(false);
+                            }}
+                        >
+                            Huỷ
+                        </Button>
+                        <Button
+                            primary
+                            className={cx('confirm-btn')}
+                            onClick={() => {
+                                axios
+                                    .delete(`http://localhost:8080/api/phieuxuat/delete?id=${dataDelete.id}`, {
+                                        withCredentials: true,
+                                    })
+                                    .then((response) => {
+                                        alert('Xoá thành công');
+                                        window.location.reload();
+                                    })
+                                    .catch((err) => {
+                                        console.log(err);
+                                    });
+                                setComfirmDelete(false);
+                            }}
+                        >
+                            Đồng ý
+                        </Button>
                     </div>
                 </div>
             ) : (

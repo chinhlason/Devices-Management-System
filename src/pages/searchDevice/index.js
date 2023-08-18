@@ -71,14 +71,20 @@ function SearchDevice() {
 
     const columnDefs = useMemo(
         () => [
+            {
+                headerName: 'STT',
+                valueGetter: 'node.rowIndex + 1',
+                sortable: false,
+                width: 70,
+            },
             { field: 'name', headerName: 'TÊN THIẾT BỊ', filter: true },
             { field: 'serial', headerName: 'SERIAL', filter: true },
-            { field: 'price', headerName: 'Giá tiền', filter: true },
+            { field: 'price', headerName: 'Giá tiền', filter: true, width: 130 },
             { field: 'warrantyTime', headerName: 'Thời hạn bảo hành', filter: true },
             { field: 'maintenanceTime', headerName: 'Chu kì bảo trì', filter: true },
             { field: 'status', headerName: 'Trạng thái xuất', filter: true },
             { field: 'warrantyStatus', headerName: 'Trạng thái bảo hành', filter: true },
-            { field: 'maintenanceStatus', headerName: 'Trạng thái bảo trì', filter: true },
+            { field: 'maintenanceStatus', headerName: 'Trạng thái bảo trì', filter: true, flex: 1 },
         ],
         [],
     );
@@ -191,7 +197,7 @@ function SearchDevice() {
     }, []);
 
     const handleUpdate = (data) => {
-        navigate(`/updatedevice?serial=${data.serial}`);
+        navigate(`/updatedevice?id=${data.id}`);
     };
 
     const handleExport = (data) => {

@@ -25,14 +25,20 @@ function NotiPage() {
     let count = 0;
     const columnDefs = useMemo(
         () => [
-            { field: 'id', headerName: 'ID', filter: true },
+            {
+                headerName: 'STT',
+                valueGetter: 'node.rowIndex + 1',
+                sortable: false,
+                width: 70,
+            },
+            { field: 'id', headerName: 'ID', filter: true, width: 90 },
             { field: 'type', headerName: 'Loại yêu cầu', filter: true },
             { field: 'receiver', headerName: 'Người gửi', filter: true },
             { field: 'note', headerName: 'Ghi chú' },
             { field: 'serial', headerName: 'Serial', filter: true },
             { field: 'tenPhong', headerName: 'Tên phòng', filter: true },
             { field: 'tenBan', headerName: 'Tên ban', filter: true },
-            { field: 'tenVien', headerName: 'Tên viện', filter: true, width: 120 },
+            { field: 'tenVien', headerName: 'Tên viện', filter: true, width: 120, flex: 1 },
             {
                 headerName: '',
                 field: 'actions',

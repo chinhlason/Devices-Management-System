@@ -1,22 +1,28 @@
 .wrapper {
     position: relative;
     background-color: white;
-    height: 600px;
+    height: 500px;
     width: 500px;
     margin-left: auto;
     margin-right: auto;
     margin-top: 200px;
     border-radius: 10px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 }
 
 .user-infor {
-    margin: 20px;
-    margin-left: 40px;
+    width: 100%;
+    padding: 0px 50px;
     font-size: 20px;
 }
 
 .wrapper h1 {
-    margin: 10px;
+    padding: 20px;
+    // display: flex;
+    // justify-content: center;
+    // align-items: center;
 }
 
 .user-infor :first-child {
@@ -47,4 +53,8 @@
 
 .form-boxs {
     max-height: 200px;
+}
+
+.text {
+    color: rgb(206, 33, 33);
 }

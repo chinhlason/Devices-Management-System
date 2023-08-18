@@ -16,7 +16,7 @@ function Footer() {
     return (
         <footer className={cx('footer')}>
             <div className={cx('content')}>
-                <p>&copy; Made By Son&Thinh.</p>
+                <p>Copyright &copy; Son&Thinh.</p>
             </div>
         </footer>
     );

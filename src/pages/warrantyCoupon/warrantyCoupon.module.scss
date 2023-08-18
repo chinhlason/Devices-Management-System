@@ -58,6 +58,7 @@
     border-radius: 10px;
     margin-left: 20px;
     width: 350px;
+    overflow: auto;
 }
 
 .infor-coupon p {
@@ -191,7 +192,7 @@
     font-size: 20px;
     width: 22%;
 }
-
+.infor-coupon-3 p,
 .infor-coupon-searched p {
     margin: 10px;
     font-size: 20px;
@@ -253,4 +254,44 @@ input:not(:placeholder-shown) ~ .search-btn {
     &:active {
         background-color: rgba(22, 24, 35, 0.06);
     }
+}
+
+.table-2-searched.hide {
+    display: none;
+}
+
+.wrapper-3 {
+    display: none;
+}
+
+.wrapper-3.show {
+    display: flex;
+    position: relative;
+    width: 100%;
+}
+
+.table-3 {
+    position: absolute;
+    top: 100px;
+    right: -1300px;
+}
+
+.infor-coupon-3 {
+    position: absolute;
+    margin-right: 40px;
+    border: 1px solid black;
+    height: 600px;
+    margin-top: 100px;
+    border-radius: 10px;
+    margin-left: 20px;
+    width: 350px;
+    overflow: auto;
+    left: -500px;
+    top: 20px;
+}
+
+.button-back {
+    position: absolute;
+    bottom: -70px;
+    left: -400px;
 }

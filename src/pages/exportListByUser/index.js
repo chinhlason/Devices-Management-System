@@ -59,12 +59,18 @@ function ExportListByUser() {
     const navigate = useNavigate();
     const columnDefs = useMemo(
         () => [
-            { field: 'id', headerName: 'ID', filter: true },
+            {
+                headerName: 'STT',
+                valueGetter: 'node.rowIndex + 1',
+                sortable: false,
+                width: 70,
+            },
+            { field: 'id', headerName: 'ID', filter: true, width: 120 },
             { field: 'exporter', headerName: 'Người xuất', filter: true },
             { field: 'receiver', headerName: 'Người tiếp nhận', filter: true },
             { field: 'number', headerName: 'Số lượng sản phẩm', filter: true },
             { field: 'name', headerName: 'Tên sản phẩm' },
-            { field: 'dateExport', headerName: 'Ngày xuất', filter: true },
+            { field: 'dateExport', headerName: 'Ngày xuất', filter: true, flex: 1 },
             {
                 headerName: '',
                 field: 'actions',
@@ -91,11 +97,17 @@ function ExportListByUser() {
 
     const columnDefsmini = useMemo(
         () => [
-            { field: 'name', headerName: 'TÊN THIẾT BỊ', filter: true },
-            { field: 'serial', headerName: 'SERIAL', filter: true },
-            { field: 'price', headerName: 'Giá tiền' },
+            {
+                headerName: 'STT',
+                valueGetter: 'node.rowIndex + 1',
+                sortable: false,
+                width: 70,
+            },
+            { field: 'name', headerName: 'TÊN THIẾT BỊ', filter: true, width: 250 },
+            { field: 'serial', headerName: 'SERIAL', filter: true, width: 150 },
+            { field: 'price', headerName: 'Giá tiền', width: 150 },
             { field: 'warrantyTime', headerName: 'Thời hạn bảo hành', filter: true },
-            { field: 'maintenanceTime', headerName: 'Chu kì bảo trì', filter: true },
+            { field: 'maintenanceTime', headerName: 'Chu kì bảo trì', filter: true, flex: 1 },
         ],
         [],
     );
