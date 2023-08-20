@@ -29,18 +29,9 @@ function ResetPassword() {
     console.log(token);
     const [access, setAccess] = useState(false);
     const onSubmit = (data) => {
-        console.log(1);
+        console.log('email', data.email);
         httpRequest
-            .post(
-                `/resetPassword?email=${data.email}`,
-                {},
-                {
-                    withCredentials: true,
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                },
-            )
+            .post(`/resetPassword?email=${data.email}`, {}, { withCredentials: true })
             .then((response) => {
                 console.log(response);
                 alert('Gửi thành công! Kiểm tra email của bạn');

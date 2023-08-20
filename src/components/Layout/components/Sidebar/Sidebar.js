@@ -144,7 +144,7 @@ function Sidebar() {
                 console.log(err);
             });
     };
-
+    console.log('CATE', category);
     return (
         <>
             {roles === 'ROLE_ADMIN' ? (
