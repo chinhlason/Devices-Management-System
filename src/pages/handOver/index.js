@@ -1,6 +1,5 @@
 import { useLocation } from 'react-router-dom';
 import httpRequest from '~/utils/htppRequest';
-import * as emailValator from 'email-validator';
 import React, { useState, useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
@@ -12,7 +11,6 @@ import Button from '~/components/Button';
 const cx = classNames.bind(styles);
 
 const WARRANTY_URL = '/warrantycard/list';
-const USER_URL = '/user/list';
 
 function HandOver() {
     const navigate = useNavigate();
@@ -21,14 +19,10 @@ function HandOver() {
     const {
         register,
         handleSubmit,
-        control,
         formState: { errors },
     } = useForm();
     const queryParams = new URLSearchParams(location.search);
     const serial = queryParams.get('serial');
-    const username = localStorage.getItem('username');
-    console.log(username);
-    console.log(serial);
     const [warrantyData, setWarrantyData] = useState([]);
     const [showData, setShowData] = useState([]);
     const [showDataUser, setShowDataUser] = useState([]);
@@ -38,7 +32,6 @@ function HandOver() {
             .get(WARRANTY_URL, { withCredentials: true })
             .then((response) => {
                 const data = response.data; // Assuming the response is an array of objects
-                console.log(data);
                 setWarrantyData(data);
             })
             .catch((err) => {
@@ -51,32 +44,15 @@ function HandOver() {
             (element) => element.status === 'DANG_BAO_HANH' && element.device.serial === serial,
         );
         if (dataSend.length > 0) {
-            console.log(dataSend);
             setShowData(dataSend);
         }
     }, [warrantyData]);
-
-    const handleHandOver = () => {
-        httpRequest
-            .get(`/warrantycard/transfer?id=${showData[0].id}&price=${showData[0].device.price}`, {
-                withCredentials: true,
-            })
-            .then((response) => {
-                console.log('sda', response.data);
-                alert('Bàn giao thành công');
-                navigate('/service');
-            })
-            .catch((err) => {
-                console.log(err);
-            });
-    };
 
     useEffect(() => {
         if (showData.length > 0) {
             httpRequest
                 .get(`/user?username=${showData[0].receiver}`, { withCredentials: true })
                 .then((response) => {
-                    console.log('sda', response.data);
                     setShowDataUser(response.data);
                 })
                 .catch((err) => {
@@ -85,13 +61,11 @@ function HandOver() {
         }
     }, [showData]);
     const onSubmit = (data) => {
-        console.log('checker', data.input);
         httpRequest
             .get(`/warrantycard/transfer?id=${showData[0].id}&price=${data.input}`, {
                 withCredentials: true,
             })
             .then((response) => {
-                console.log('sda', response.data);
                 alert('Bàn giao thành công');
                 navigate('/service');
             })

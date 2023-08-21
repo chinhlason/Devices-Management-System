@@ -1,5 +1,5 @@
 import React from 'react';
-import { useForm, Controller, formState } from 'react-hook-form';
+import { useForm, Controller } from 'react-hook-form';
 import Select from 'react-select';
 import * as emailValidator from 'email-validator';
 import httpRequest from '~/utils/htppRequest';
@@ -20,7 +20,6 @@ function SignUp() {
         control,
         formState: { errors },
     } = useForm();
-    console.log(errors);
     const onSubmit = (data) => {
         const resquestData = {
             username: data.username,
@@ -34,7 +33,6 @@ function SignUp() {
             tenPhong: data.tenPhong,
             tenBan: data.tenBan,
         };
-        console.log(resquestData);
         httpRequest
             .post(SIGN_UP_URL, resquestData, {
                 withCredentials: true,
@@ -43,7 +41,6 @@ function SignUp() {
                 },
             })
             .then((response) => {
-                console.log(response);
                 alert('Tạo mới thành công');
                 navigate('/profile');
             })

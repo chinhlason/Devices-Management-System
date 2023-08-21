@@ -60,7 +60,6 @@ const Service = () => {
             .then((response) => {
                 const data = response.data; // Assuming the response is an array of objects
                 setRowData(data);
-                console.log(data);
             })
             .catch((err) => {
                 console.log(err);
@@ -193,7 +192,6 @@ const Service = () => {
                 const result = data.find((element) => {
                     return serial.serial === element.serial;
                 });
-                console.log('kq', result);
                 setShowInfor(result);
             })
             .catch((err) => {
@@ -201,7 +199,6 @@ const Service = () => {
             });
         setShowDetail(true);
     };
-    console.log('check', showInfor);
     localStorage.setItem('previousPage', 'service');
     return (
         <div className={cx('wrapper')}>

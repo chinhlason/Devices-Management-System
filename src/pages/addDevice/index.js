@@ -1,12 +1,12 @@
 import React from 'react';
-import { useState, useEffect, useMemo, useRef } from 'react';
+import { useState, useMemo, useRef } from 'react';
 import { useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
 import httpRequest from '~/utils/htppRequest';
 import { AgGridReact } from 'ag-grid-react'; // the AG Grid React Component
 import 'ag-grid-community/styles/ag-grid.css'; // Core grid CSS, always needed
 import 'ag-grid-community/styles/ag-theme-alpine.css';
-import { read, utils, writeFile } from 'xlsx';
+import { read, utils } from 'xlsx';
 
 import styles from './addDevice.module.scss';
 import classNames from 'classnames/bind';
@@ -118,11 +118,9 @@ const AddDevice = () => {
                 categoryDescription: device.categoryDescription,
             })),
         };
-        console.log(resquestData);
         httpRequest
             .post(PHIEU_NHAP_URL, resquestData, { withCredentials: true })
             .then((response) => {
-                console.log(response);
                 alert('Tạo mới thành công');
                 navigate('/service');
             })
@@ -147,7 +145,6 @@ const AddDevice = () => {
         return true;
     };
     const handleImportFile = (event) => {
-        console.log('File Import');
         const files = event.target.files;
         if (files.length) {
             const file = files[0];
@@ -169,8 +166,6 @@ const AddDevice = () => {
                     ],
                     raw: true,
                 });
-                console.log('excel:');
-                console.log(rows);
                 setDeviceList(rows);
             };
             reader.readAsArrayBuffer(file);

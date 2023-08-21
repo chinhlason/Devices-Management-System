@@ -177,7 +177,6 @@ function WarrantyCoupon() {
             .get(`/warrantycard?id=${rowData2.id}`, { withCredentials: true })
             .then((response) => {
                 const data = response.data;
-                console.log(data);
                 const dataImport = {
                     id: data.id,
                     createAt: data.createAt,
@@ -189,7 +188,6 @@ function WarrantyCoupon() {
                     confirmStatus: data.confirmStatus,
                     price: data.price,
                 };
-                console.log(data.device);
                 setDataMiniPage(dataImport);
                 const devices = {
                     name: data.device.name,
@@ -200,9 +198,7 @@ function WarrantyCoupon() {
                     warrantyStatus: data.device.warrantyStatus,
                     maintenanceStatus: data.device.maintenanceStatus,
                 };
-                console.log('s', devices);
                 setDataMiniTable([devices]);
-                console.log('ss', dataMiniTable);
             })
             .catch((err) => {
                 console.log(err);
@@ -215,7 +211,6 @@ function WarrantyCoupon() {
             .get(`/warrantycard?id=${rowData2.id}`, { withCredentials: true })
             .then((response) => {
                 const data = response.data;
-                console.log(data);
                 const dataImport = {
                     id: data.id,
                     createAt: data.createAt,
@@ -227,7 +222,6 @@ function WarrantyCoupon() {
                     confirmStatus: data.confirmStatus,
                     price: data.price,
                 };
-                console.log(data.device);
                 setDataMiniPage(dataImport);
                 const devices = {
                     name: data.device.name,
@@ -238,9 +232,7 @@ function WarrantyCoupon() {
                     warrantyStatus: data.device.warrantyStatus,
                     maintenanceStatus: data.device.maintenanceStatus,
                 };
-                console.log('s', devices);
                 setDataMiniTable([devices]);
-                console.log('ss', dataMiniTable);
             })
             .catch((err) => {
                 console.log(err);
@@ -327,7 +319,6 @@ function WarrantyCoupon() {
                 const result = data.find((element) => {
                     return serial.serial === element.serial;
                 });
-                console.log('kq', result);
                 setShowInfor(result);
             })
             .catch((err) => {
@@ -335,15 +326,12 @@ function WarrantyCoupon() {
             });
         setShowDetail(true);
     };
-    console.log('checkkk', dataMiniPageSearched);
     const onSubmit = (data) => {
-        console.log('dataserial', data.serial);
         httpRequest
             .get(`/warrantycard/list-by-serial-device?serial=${data.serial}`, {
                 withCredentials: true,
             })
             .then((response) => {
-                console.log('data tim dc', response.data);
                 const data_searched = response.data.map((element) => {
                     return {
                         id: element.id,
@@ -361,6 +349,7 @@ function WarrantyCoupon() {
                 setDataMiniPageSearched(data_searched);
             })
             .catch((err) => {
+                alert('Không tìm thấy phiếu bảo hành cho thiết bị tương ứng!');
                 console.log(err);
             });
     };
@@ -417,6 +406,7 @@ function WarrantyCoupon() {
                                     <FontAwesomeIcon icon={faMagnifyingGlass} />
                                 </button>
                             </form>
+
                             <Button
                                 primary
                                 className={cx('button-cancel-search')}

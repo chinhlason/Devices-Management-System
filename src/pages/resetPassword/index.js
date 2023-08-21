@@ -26,14 +26,11 @@ function ResetPassword() {
     const location = useLocation();
     const queryParams = new URLSearchParams(location.search);
     const token = queryParams.get('token');
-    console.log(token);
     const [access, setAccess] = useState(false);
     const onSubmit = (data) => {
-        console.log('email', data.email);
         httpRequest
             .post(`/resetPassword?email=${data.email}`, {}, { withCredentials: true })
             .then((response) => {
-                console.log(response);
                 alert('Gửi thành công! Kiểm tra email của bạn');
             })
             .catch((err) => {
@@ -46,7 +43,6 @@ function ResetPassword() {
             httpRequest
                 .get(`/verifyToken?token=${token}`, { withCredentials: true })
                 .then((response) => {
-                    const data = response.data;
                     setAccess(true);
                 })
                 .catch((err) => {
@@ -76,7 +72,6 @@ function ResetPassword() {
                     navigate('/resetpassword');
                 });
         } else {
-            console.log('không trùng');
             alert('Mật khẩu mới không trùng khớp');
         }
     };

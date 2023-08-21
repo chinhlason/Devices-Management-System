@@ -1,7 +1,7 @@
 import React, { useState, useRef, useEffect, useMemo, useCallback } from 'react';
 import { AgGridReact } from 'ag-grid-react';
 import httpRequest from '~/utils/htppRequest';
-import { useForm, Controller, formState } from 'react-hook-form';
+import { useForm } from 'react-hook-form';
 
 import 'ag-grid-community/styles/ag-grid.css';
 import 'ag-grid-community/styles/ag-theme-alpine.css';
@@ -62,7 +62,6 @@ function ExportListDevice() {
         httpRequest
             .get(DEVICE_URL, { withCredentials: true })
             .then((response) => {
-                console.log(response.data);
                 const responseList = response.data.filter(function (device) {
                     return device.status !== 'DA_XUAT';
                 });
@@ -87,7 +86,6 @@ function ExportListDevice() {
     const handleAdd = () => {
         setShowMiniPage(true);
     };
-    console.log(userInfor.username);
     const handleAddCoupon = () => {
         if (userInfor !== undefined && rowData.length !== 0) {
             setIsAllow(true);
@@ -95,11 +93,9 @@ function ExportListDevice() {
                 receiver: userInfor.username,
                 devices: rowData.map((device) => device.serial),
             };
-            console.log(resquestData);
             httpRequest
                 .post(EXPORT_URL, resquestData, { withCredentials: true })
                 .then((response) => {
-                    console.log(response);
                     alert('Tạo mới thành công');
                     navigate('/service');
                 })
@@ -112,18 +108,14 @@ function ExportListDevice() {
     };
     const handleAddList = () => {
         const selectedRows = gridRef.current.api.getSelectedRows();
-        console.log('Selected Rows:', selectedRows);
         const newData = [...rowData, ...selectedRows];
         setRowData(newData);
         setShowMiniPage(false);
         const newDataMiniPage = rowDataMini.filter((element) => !selectedRows.includes(element));
-        console.log(newDataMiniPage);
         setRowDataMini(newDataMiniPage);
     };
-    console.log(userInfor);
     const onSubmit = (data) => {
         const username = data.username;
-        console.log(username);
         httpRequest
             .get(USER_URL, { withCredentials: true })
             .then((response) => {
@@ -133,7 +125,6 @@ function ExportListDevice() {
                 if (responseInfor !== undefined) {
                     setIsExist(true);
                     setUserInfor(responseInfor);
-                    console.log(userInfor);
                 } else {
                     setIsExist(false);
                     setUserInfor([]);
@@ -143,7 +134,6 @@ function ExportListDevice() {
                 console.log(err);
             });
     };
-    console.log(isAllow);
     return (
         <div className={cx('wrapper')}>
             <div className={cx('content')}>

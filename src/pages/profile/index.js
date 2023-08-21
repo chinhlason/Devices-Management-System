@@ -179,7 +179,6 @@ function Profile() {
                 console.log(err);
             });
     };
-    console.log('showoption', showOption);
     return (
         <div className={cx('mainpage', { hide: showInfor })}>
             <div className={cx('back-ground-img')}></div>

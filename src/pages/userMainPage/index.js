@@ -10,7 +10,6 @@ import classNames from 'classnames/bind';
 import Button from '~/components/Button';
 const cx = classNames.bind(styles);
 
-const DEVICE_URL = '/device/list';
 function MainPage() {
     const gridRef = useRef(); // Optional - for accessing Grid's API
     const [rowData, setRowData] = useState([]); // Set rowData to Array of Objects, one Object per Row
@@ -55,7 +54,6 @@ function MainPage() {
             .then((response) => {
                 const data = response.data; // Assuming the response is an array of objects
                 setRowData(data);
-                console.log(data);
             })
             .catch((err) => {
                 console.log(err);
@@ -138,7 +136,6 @@ function MainPage() {
                 const result = data.find((element) => {
                     return serial.serial === element.serial;
                 });
-                console.log('kq', result);
                 setShowInfor(result);
             })
             .catch((err) => {

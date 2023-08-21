@@ -90,27 +90,18 @@ function NotiPage() {
         }),
         [],
     );
-    const cellClickedListener = useCallback((event) => {
-        console.log('cellClicked', event);
-    }, []);
-
-    const rowClickedListener = useCallback((event) => {
-        console.log('rowClicked', event);
-    }, []);
 
     useEffect(() => {
         httpRequest
             .get(REQUEST_URL, { withCredentials: true })
             .then((response) => {
                 const data = response.data;
-                console.log(data);
                 setSaveData(data);
             })
             .catch((err) => {
                 console.log(err);
             });
     }, [alertShown]);
-    console.log('save', saveData);
     useEffect(() => {
         const newData = saveData.map((element) => {
             return httpRequest.get(`/user?username=${element.receiver}`, { withCredentials: true }).then((response) => {
@@ -124,7 +115,6 @@ function NotiPage() {
                     tenBan: response.data.tenBan,
                     tenVien: response.data.tenVien,
                 };
-                console.log('sss', dataSave);
                 return dataSave;
             });
         });
@@ -138,7 +128,6 @@ function NotiPage() {
         httpRequest
             .get(`/warrantycard/confirm?id=${data.id}`, { withCredentials: true })
             .then((response) => {
-                console.log(response.data);
                 alert('Thành công');
                 setAlertShown(true);
                 navigate('/notification');
@@ -155,7 +144,6 @@ function NotiPage() {
         httpRequest
             .get(`/warrantycard/deny?id=${data.id}`, { withCredentials: true })
             .then((response) => {
-                console.log(response.data);
                 alert('Thành công');
                 setAlertShown(true);
                 navigate('/notification');
@@ -237,7 +225,6 @@ function NotiPage() {
     }, []);
 
     const handleDetail = (data) => {
-        console.log('checker', data.serial);
         httpRequest
             .get(DEVICE_URL, { withCredentials: true })
             .then((response) => {
@@ -245,7 +232,6 @@ function NotiPage() {
                 const result = data_input.find((element) => {
                     return data.serial === element.serial;
                 });
-                console.log('kq', result);
                 setShowInforDevice(result);
             })
             .catch((err) => {
@@ -254,8 +240,6 @@ function NotiPage() {
         setShowInfor(data);
         setShowDetail(true);
     };
-    console.log('datachecked', showInfor);
-    console.log('datadevice', showInforDevice);
     return (
         <div className={cx('wrapper')}>
             <div

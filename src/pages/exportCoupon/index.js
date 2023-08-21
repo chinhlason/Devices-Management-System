@@ -149,7 +149,6 @@ function ExportCoupon() {
             .get(`/phieuxuat?id=${rowData2.id}`, { withCredentials: true })
             .then((response) => {
                 const data = response.data;
-                console.log(data);
                 const dataImport = {
                     id: data.id,
                     exporter: data.exporter,
@@ -176,7 +175,6 @@ function ExportCoupon() {
         setIsOpenMiniPage(false);
         navigate('/exportcoupon');
     };
-    console.log(dataMiniPage);
 
     const cellContextMenuListener = useCallback((params) => {
         params.event.preventDefault();
@@ -254,7 +252,6 @@ function ExportCoupon() {
                 const result = data.find((element) => {
                     return serial.serial === element.serial;
                 });
-                console.log('kq', result);
                 setShowInfor(result);
             })
             .catch((err) => {
@@ -262,7 +259,6 @@ function ExportCoupon() {
             });
         setShowDetail(true);
     };
-    console.log('sow', showInfor);
 
     const onSubmit = (data) => {
         httpRequest
@@ -296,7 +292,6 @@ function ExportCoupon() {
     };
 
     const handleDelete = (data) => {
-        console.log('checker', data.id);
         setComfirmDelete(true);
         setDataDelete(data);
     };

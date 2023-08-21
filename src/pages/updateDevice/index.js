@@ -2,7 +2,6 @@ import { useLocation } from 'react-router-dom';
 import httpRequest from '~/utils/htppRequest';
 import { useForm } from 'react-hook-form';
 import { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
 import { createBrowserHistory } from 'history';
 
 import styles from './updateDevice.module.scss';
@@ -11,14 +10,11 @@ import Button from '~/components/Button';
 const cx = classNames.bind(styles);
 
 const DEVICE_URL = '/device/list';
-const UPDATE_URL = '/device/update?id=1';
 
 function UpdateDevices() {
-    const navigate = useNavigate();
     const location = useLocation();
     const queryParams = new URLSearchParams(location.search);
     const id = queryParams.get('id');
-    console.log('id in', typeof id);
     const [deviceInfor, setDeviceInfo] = useState('');
     const history = createBrowserHistory();
     const {
@@ -31,10 +27,8 @@ function UpdateDevices() {
             .get(DEVICE_URL, { withCredentials: true })
             .then((response) => {
                 const responseInfor = response.data.find(function (device) {
-                    console.log('id', typeof device.id);
                     return device.id == id;
                 });
-                console.log('kq', responseInfor);
                 setDeviceInfo(responseInfor);
             })
             .catch((err) => {
@@ -42,7 +36,6 @@ function UpdateDevices() {
             });
     }, []);
     const onSubmit = (data) => {
-        console.log('data-check', data);
         const requestData = {
             name: data.name || deviceInfor?.name,
             serial: data.serial || deviceInfor?.serial,
@@ -51,11 +44,9 @@ function UpdateDevices() {
             maintenanceTime: data.maintenanceTime || deviceInfor?.maintenanceTime,
             categoryId: data.categoryId || deviceInfor?.categoryId,
         };
-        console.log(requestData);
         httpRequest
             .put(`/device/update?id=${id}`, requestData, { withCredentials: true })
             .then((response) => {
-                console.log(response.data);
                 alert('Cập nhật thành công!');
                 history.back();
             })

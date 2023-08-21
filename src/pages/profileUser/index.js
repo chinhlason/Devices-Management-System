@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect, useMemo, useCallback } from 'react';
+import React, { useState, useEffect } from 'react';
 import httpRequest from '~/utils/htppRequest';
 import { useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
@@ -29,9 +29,6 @@ function ProfileUser() {
 
         reset,
     } = useForm();
-    useEffect(() => {
-        console.log(12);
-    }, []);
 
     const handleChangePassword = () => {
         setIsOpenMiniPage(true);
@@ -47,7 +44,6 @@ function ProfileUser() {
             .then((response) => {
                 const data = response.data; // Assuming the response is an array of objects
                 setUserInfor(data);
-                console.log(data);
             })
             .catch((err) => {
                 console.log(err);
@@ -55,10 +51,6 @@ function ProfileUser() {
     }, []);
 
     const onSubmit = (data) => {
-        console.log(data.oldPassword);
-        console.log(data.newPassword);
-        console.log(data.reNewPassword);
-
         if (data.newPassword === data.reNewPassword) {
             httpRequest
                 .post(
@@ -69,7 +61,6 @@ function ProfileUser() {
                     },
                 )
                 .then((response) => {
-                    console.log(response.data);
                     alert('Cập nhật thành công!');
                     httpRequest
                         .post(
@@ -99,11 +90,9 @@ function ProfileUser() {
                     }
                 });
         } else {
-            console.log('không trùng');
             alert('Mật khẩu mới không trùng khớp');
         }
     };
-    console.log(userInfor);
     return (
         <div>
             <div className={cx('back-ground-img')}></div>

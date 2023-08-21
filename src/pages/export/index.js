@@ -24,7 +24,6 @@ function Export() {
         formState: { errors },
     } = useForm();
     const [deviceInfor, setDeviceInfo] = useState({});
-    const [username, setUsername] = useState('');
     const [userInfor, setUserInfor] = useState({});
 
     const [isExist, setIsExist] = useState(false);
@@ -33,24 +32,10 @@ function Export() {
         getDeviceInformation();
     }, []);
 
-    useEffect(() => {
-        httpRequest
-            .get(USER_URL, { withCredentials: true })
-            .then((response) => {
-                const responseInfor = response.data.find(function (device) {
-                    return device.username === username;
-                });
-            })
-            .catch((err) => {
-                console.log(err);
-            });
-    }, [username]);
-
     const getDeviceInformation = () => {
         httpRequest
             .get(DEVICE_URL, { withCredentials: true })
             .then((response) => {
-                console.log(response.data);
                 const responseInfor = response.data.find(function (device) {
                     return device.serial === serial;
                 });
@@ -62,7 +47,6 @@ function Export() {
     };
     const onSubmit = (data) => {
         const username = data.username;
-        console.log(username);
         httpRequest
             .get(USER_URL, { withCredentials: true })
             .then((response) => {
@@ -72,7 +56,6 @@ function Export() {
                 if (responseInfor !== undefined) {
                     setIsExist(true);
                     setUserInfor(responseInfor);
-                    console.log(userInfor);
                 } else {
                     setIsExist(false);
                 }
@@ -87,11 +70,9 @@ function Export() {
             receiver: userInfor.username,
             devices: [deviceInfor.serial],
         };
-        console.log(resquestData);
         httpRequest
             .post(EXPORT_URL, resquestData, { withCredentials: true })
             .then((response) => {
-                console.log(response);
                 alert('Tạo mới thành công');
                 navigate('/service');
             })

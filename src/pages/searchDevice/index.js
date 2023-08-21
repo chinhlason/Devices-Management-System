@@ -11,10 +11,8 @@ import styles from './searchDevice.module.scss';
 import classNames from 'classnames/bind';
 import Button from '~/components/Button';
 import { createBrowserHistory } from 'history';
-import clsx from 'clsx';
 const cx = classNames.bind(styles);
 
-const DEVICE_URL = '/device/list';
 let INPUT_URL;
 function SearchDevice() {
     const history = createBrowserHistory();
@@ -48,7 +46,6 @@ function SearchDevice() {
                 const option = data.input_option;
                 if (option === 'name') {
                     const filteredDevices = data_input.filter((device) => device.name.includes(input));
-                    console.log('checked1', filteredDevices);
                     if (filteredDevices.length > 0) {
                         setRowData(filteredDevices);
                     } else {
@@ -56,7 +53,6 @@ function SearchDevice() {
                     }
                 } else {
                     const filteredDevices = data_input.filter((device) => device.serial.includes(input));
-                    console.log('checked2', filteredDevices);
                     if (filteredDevices.length > 0) {
                         setRowData(filteredDevices);
                     } else {
@@ -209,15 +205,15 @@ function SearchDevice() {
     };
 
     const handleMaintainanceState = (data) => {
-        console.log(1);
-    };
-
-    const handleAdd = (data) => {
-        navigate('/adddevice?role=ROLE_ADMIN');
-    };
-
-    const handleExportList = () => {
-        navigate('/exportlistdevice?role=ROLE_ADMIN');
+        httpRequest
+            .get(`/device/confirm-maintance?serial=${data.serial}`, { withCredentials: true })
+            .then((response) => {
+                alert('Thay đổi trạng thái bảo trì thành công');
+                window.location.reload();
+            })
+            .catch((err) => {
+                console.log(err);
+            });
     };
 
     const handleDetail = (serial) => {
@@ -237,7 +233,6 @@ function SearchDevice() {
                 const result = data.find((element) => {
                     return serial.serial === element.serial;
                 });
-                console.log('kq', result);
                 setShowInfor(result);
             })
             .catch((err) => {
@@ -245,7 +240,6 @@ function SearchDevice() {
             });
         setShowDetail(true);
     };
-    console.log('trang trc', previousPage);
     return (
         <div className={cx('wrapper')}>
             <div className={cx('back-ground-img')}></div>

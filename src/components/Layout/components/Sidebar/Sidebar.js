@@ -3,17 +3,13 @@ import styles from './Sidebar.module.scss';
 import React, { useEffect, useState } from 'react';
 import SideBarItem, { LogOut, SideBarOption } from './MenuSidebar';
 import { useNavigate } from 'react-router-dom';
-import { useLocation } from 'react-router-dom';
 import httpRequest from '~/utils/htppRequest';
-import { useForm, Controller } from 'react-hook-form';
+import { useForm } from 'react-hook-form';
 import { faMagnifyingGlass } from '@fortawesome/free-solid-svg-icons';
 
-import Button from '~/components/Button';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
-    faAngle,
     faAngleUp,
-    faAnglesDown,
     faAngleDown,
     faUser,
     faHouse,
@@ -23,28 +19,19 @@ import {
 } from '@fortawesome/free-solid-svg-icons';
 
 const cx = classNames.bind(styles);
-const CATEGORY_URL = '/category/list';
+const CATEGORY_URL = '/category/list-distinct-categories';
 
 function Sidebar() {
-    const location = useLocation();
-    const queryParams = new URLSearchParams(location.search);
-    const role = queryParams.get('role');
     const roles = localStorage.getItem('role');
     const navigate = useNavigate();
     const [isOpen1, setIsOpen1] = useState(false);
     const [isOpen2, setIsOpen2] = useState(false);
     const [isOpen3, setIsOpen3] = useState(false);
     const [isOpen4, setIsOpen4] = useState(false);
-    const [isOpen5, setIsOpen5] = useState(false);
     const [category, setCategory] = useState([]);
     const [isMainPage, setIsMainPage] = useState(false);
     const [categoryData, setCategoryData] = useState([]); // Thêm state mới để lưu trữ số lượng thiết bị
-    const {
-        register,
-        handleSubmit,
-        control,
-        formState: { errors },
-    } = useForm();
+    const { register, handleSubmit } = useForm();
     const handleOpen1 = () => {
         setIsOpen1((prevIsOpen1) => !prevIsOpen1);
         setIsOpen2(false);
@@ -120,7 +107,7 @@ function Sidebar() {
     useEffect(() => {
         setCategoryData([]); // Reset dữ liệu số lượng thiết bị khi danh mục thay đổi
         category.forEach((element) => {
-            takeNumberdevice(element.name); // Gọi hàm takeNumberdevice cho mỗi danh mục
+            takeNumberdevice(element); // Gọi hàm takeNumberdevice cho mỗi danh mục
         });
     }, [category]);
 
@@ -132,9 +119,7 @@ function Sidebar() {
                 const input = data.input;
 
                 const filteredDevices = data_input.filter((device) => device.name.includes(input));
-                console.log('checked1', filteredDevices);
                 if (filteredDevices.length > 0) {
-                    console.log(filteredDevices[0].name);
                     navigate(`/categorydevice?category=${filteredDevices[0].name}`);
                 } else {
                     alert('Không tìm thấy danh mục');
@@ -144,7 +129,6 @@ function Sidebar() {
                 console.log(err);
             });
     };
-    console.log('CATE', category);
     return (
         <>
             {roles === 'ROLE_ADMIN' ? (
@@ -231,15 +215,15 @@ function Sidebar() {
                                     </form>
                                     {category.map((element, index) => {
                                         const matchedCategory = categoryData.find(
-                                            (data) => data.categoryName === element.name,
+                                            (data) => data.categoryName === element,
                                         );
                                         const categoryLength = matchedCategory ? matchedCategory.length : 0;
                                         return (
                                             <div>
                                                 <li key={index}>
                                                     <SideBarOption
-                                                        title={element.name + ` (${categoryLength})`}
-                                                        to={`/categorydevice?category=${element.name}`}
+                                                        title={element + ` (${categoryLength})`}
+                                                        to={`/categorydevice?category=${element}`}
                                                     />
                                                 </li>
                                             </div>

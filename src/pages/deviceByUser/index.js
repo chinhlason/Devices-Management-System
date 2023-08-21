@@ -70,7 +70,6 @@ function DeviceByUsers() {
             .then((response) => {
                 const data = response.data; // Assuming the response is an array of objects
                 setRowData(data);
-                console.log(data);
             })
             .catch((err) => {
                 console.log(err);
@@ -149,13 +148,7 @@ function DeviceByUsers() {
         setDataRequest(data);
     };
 
-    const handleCancel = () => {
-        setIsOpenRequestPage(false);
-    };
-
     const onSubmit = (data) => {
-        console.log(data.note);
-        console.log(dataRequest.serial);
         const dataSend = {
             note: data.note,
             serial: dataRequest.serial,
@@ -163,7 +156,6 @@ function DeviceByUsers() {
         httpRequest
             .post(REQUEST_URL, dataSend, { withCredentials: true })
             .then((response) => {
-                console.log(response.data);
                 alert('Gửi thành công');
                 setIsOpenRequestPage(false);
                 reset();
@@ -180,7 +172,6 @@ function DeviceByUsers() {
                 const result = data.find((element) => {
                     return serial.serial === element.serial;
                 });
-                console.log('kq', result);
                 setShowInfor(result);
             })
             .catch((err) => {

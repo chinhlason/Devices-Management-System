@@ -1,51 +1,20 @@
 import styles from './Header.module.scss';
 import classNames from 'classnames/bind';
-import Button from '~/components/Button';
 import Tippy from '@tippyjs/react/headless';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCircleXmark, faMagnifyingGlass, faSpinner, faBell } from '@fortawesome/free-solid-svg-icons';
 import httpRequest from '~/utils/htppRequest';
-import NotificationItem from '~/components/NotificationItem';
-import { useLocation } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
-import React, { useEffect, useState, useRef } from 'react';
+import React, { useEffect, useState } from 'react';
 
 const cx = classNames.bind(styles);
 let NOTI_URL;
 let READ_URL;
 function Header() {
     const navigate = useNavigate();
-    const roles = localStorage.getItem('role');
     const [isHaveNoti, setIsHaveNoti] = useState(false);
-    const [noti, setNoti] = useState([]);
     const [isOpenNotiWrap, SetIsOpenNotiWrap] = useState(false);
 
-    // useEffect(() => {
-    //     const fetchData = () => {
-    //         httpRequest
-    //             .get(`/warrantycard/list-unconfirm`, { withCredentials: true })
-    //             .then((response) => {
-    //                 const data = response.data;
-    //                 setNoti(data);
-
-    //                 if (JSON.stringify(data) !== JSON.stringify(noti)) {
-    //                     setIsHaveNoti(true);
-    //                 }
-    //             })
-    //             .catch((err) => {
-    //                 console.log(err);
-    //             });
-    //     };
-
-    //     fetchData();
-
-    //     const intervalId = setInterval(fetchData, 5000);
-
-    //     return () => {
-    //         clearInterval(intervalId);
-    //     };
-    // }, []);
-    console.log(isOpenNotiWrap);
     const role = localStorage.getItem('role');
     const [notiInfor, setNotiInfor] = useState([]);
 
@@ -60,12 +29,10 @@ function Header() {
             .get(NOTI_URL, { withCredentials: true })
             .then((response) => {
                 const data = response.data;
-                console.log('checkerviet', data);
                 setNotiInfor(data);
                 const check = data.find((element) => {
                     return element.read === false;
                 });
-                console.log('co thong bao moi k', check);
                 if (check !== undefined) {
                     setIsHaveNoti(true);
                 } else {

@@ -126,7 +126,6 @@ function ImportCoupon() {
             .get(`/phieunhap?id=${rowData2.id}`, { withCredentials: true })
             .then((response) => {
                 const data = response.data;
-                console.log(data);
                 const dataImport = {
                     id: data.id,
                     fullname: data.fullname,
@@ -232,7 +231,6 @@ function ImportCoupon() {
                 const result = data.find((element) => {
                     return serial.serial === element.serial;
                 });
-                console.log('kq', result);
                 setShowInfor(result);
             })
             .catch((err) => {

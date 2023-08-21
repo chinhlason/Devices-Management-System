@@ -5,7 +5,6 @@ import { useForm } from 'react-hook-form';
 
 import 'ag-grid-community/styles/ag-grid.css'; // Core grid CSS, always needed
 import 'ag-grid-community/styles/ag-theme-alpine.css'; // Optional theme CSS
-import { useNavigate } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faMagnifyingGlass } from '@fortawesome/free-solid-svg-icons';
 import styles from './exportListByUser.module.scss';
@@ -29,7 +28,6 @@ function ExportListByUser() {
                 console.log(err);
             });
     }, []);
-    console.log('data', exportCoupon);
 
     useEffect(() => {
         const data = exportCoupon.map((element) => {
@@ -56,7 +54,6 @@ function ExportListByUser() {
     const [showDetail, setShowDetail] = useState(false);
     const [showSearchSite, setShowSearchSite] = useState(false);
     const [showInfor, setShowInfor] = useState([]);
-    const navigate = useNavigate();
     const columnDefs = useMemo(
         () => [
             {
@@ -144,8 +141,6 @@ function ExportListByUser() {
                         maintenanceTime: element.maintenanceTime,
                     };
                 });
-                console.log('checker', data_input);
-                console.log('checker2', data_table);
                 setDataMiniPage(data_input);
                 setDataMiniTable(data_table);
             })
@@ -159,7 +154,6 @@ function ExportListByUser() {
             .get(EXPORT_URL, { withCredentials: true })
             .then((response) => {
                 const data_input = response.data;
-                console.log('datainput', data_input[0].devices[0].serial);
                 const result = data_input.find((element) => {
                     return element.devices.some((value) => {
                         return value.serial === data.serial;
@@ -182,13 +176,11 @@ function ExportListByUser() {
                             maintenanceTime: element.maintenanceTime,
                         };
                     });
-                    console.log('ssss1', data_table);
                     setDataMiniPageSearched(data_searched);
                     setDataMiniTableSearched(data_table);
                 } else {
                     alert('Không tìm thấy thiết bị tương ứng!');
                 }
-                console.log('result', result);
             })
             .catch((err) => {
                 console.log(err);
@@ -274,14 +266,12 @@ function ExportListByUser() {
                     });
                 });
                 setShowInfor(result[0]);
-                console.log('rs', result);
             })
             .catch((err) => {
                 console.log(err);
             });
         setShowDetail(true);
     };
-    console.log('show', showInfor);
     return (
         <div className={cx('content-all')}>
             <div

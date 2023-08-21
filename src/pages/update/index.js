@@ -41,9 +41,7 @@ function Update() {
     const {
         register,
         handleSubmit,
-        control,
         formState: { errors },
-        getValues,
     } = useForm();
 
     const onSubmit = (data) => {
@@ -56,11 +54,9 @@ function Update() {
             tenPhong: data.tenPhong || userInfor?.tenPhong,
             tenBan: data.tenBan || userInfor?.tenBan,
         };
-        console.log('s', requestData);
         httpRequest
             .put(`/user/update?username=${id}`, requestData, { withCredentials: true })
             .then((response) => {
-                console.log(response.data);
                 alert('Cập nhật thành công!');
                 navigate('/profile');
             })
@@ -87,8 +83,6 @@ function Update() {
         }
         return true;
     };
-
-    console.log(userInfor.username);
 
     const handleCancel = () => {
         navigate('/profile');

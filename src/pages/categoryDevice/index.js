@@ -11,7 +11,6 @@ import classNames from 'classnames/bind';
 import Button from '~/components/Button';
 const cx = classNames.bind(styles);
 
-const CATEGORY_URL = '/category/list';
 const DEVICE_URL = '/device/list';
 
 function CategoryDevice() {
@@ -61,7 +60,6 @@ function CategoryDevice() {
             .get(`/device/list-by-category-name?categoryName=${category}`, { withCredentials: true })
             .then((response) => {
                 const data = response.data; // Assuming the response is an array of objects
-                console.log(data);
                 setRowData(data);
             })
             .catch((err) => {
@@ -120,7 +118,15 @@ function CategoryDevice() {
     };
 
     const handleMaintainanceState = (data) => {
-        console.log(1);
+        httpRequest
+            .get(`/device/confirm-maintance?serial=${data.serial}`, { withCredentials: true })
+            .then((response) => {
+                alert('Thay đổi trạng thái bảo trì thành công');
+                window.location.reload();
+            })
+            .catch((err) => {
+                console.log(err);
+            });
     };
 
     const handleDetail = (serial) => {
@@ -131,7 +137,6 @@ function CategoryDevice() {
                 const result = data.find((element) => {
                     return serial.serial === element.serial;
                 });
-                console.log('kq', result);
                 setShowInfor(result);
             })
             .catch((err) => {
